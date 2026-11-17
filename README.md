@@ -119,11 +119,3 @@ MVP PIZZERIA/
     |-- caja.css
     `-- admin.css
 ```
-
----
-
-## Autor
-
-* **Desarrollador:** Jhamir Alexander
-* **Correo:** jhmralexander@gmail.com
-* **Proyecto:** Pizza al Paso - Transformacion Digital y Autoservicio QR
