@@ -1,0 +1,155 @@
+/* ============================================================
+   NOSOTROS.CSS — Estilos de la Historia y Artesanía
+   ============================================================ */
+
+.seccion-nosotros {
+  padding: 80px 0;
+  background: var(--fondo-tarjeta);
+  border-top: 1px solid var(--borde-claro);
+}
+
+.nosotros-interior {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 70px;
+  align-items: center;
+}
+
+.nosotros-imagen {
+  border-radius: var(--radio-lg);
+  overflow: hidden;
+  box-shadow: var(--sombra-lg);
+  position: relative;
+}
+
+.nosotros-imagen img {
+  width: 100%;
+  aspect-ratio: 4/3;
+  object-fit: cover;
+  display: block;
+  transition: transform 0.6s ease;
+}
+
+.nosotros-imagen:hover img {
+  transform: scale(1.04);
+}
+
+.sello-nosotros {
+  position: absolute;
+  bottom: 24px;
+  right: 24px;
+  background: var(--rojo);
+  color: white;
+  border-radius: 50%;
+  width: 96px;
+  height: 96px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-weight: 800;
+  box-shadow: 0 8px 24px rgba(179,27,38,0.4);
+}
+
+.sello-nosotros .numero {
+  font-size: 26px;
+  line-height: 1;
+  font-family: 'Playfair Display', serif;
+}
+
+.sello-nosotros .texto {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.nosotros-texto h2 {
+  font-size: clamp(28px, 3.6vw, 42px);
+  margin-bottom: 16px;
+}
+
+.nosotros-texto p {
+  font-size: 16px;
+  color: var(--gris);
+  line-height: 1.7;
+  margin-bottom: 22px;
+}
+
+.lista-nosotros {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 28px 0 32px;
+}
+
+.lista-nosotros li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.lista-nosotros li .item-icono {
+  font-size: 22px;
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.lista-nosotros li p {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--oscuro);
+}
+
+.lista-nosotros li small {
+  display: block;
+  font-size: 13px;
+  color: var(--gris);
+  font-weight: 400;
+  margin-top: 2px;
+}
+
+.stats-nosotros {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  padding-top: 28px;
+  border-top: 1px solid var(--borde);
+  margin-bottom: 32px;
+}
+
+.stat-item {
+  text-align: center;
+}
+
+.stat-item .numero-stat {
+  font-size: 38px;
+  font-weight: 800;
+  color: var(--rojo);
+  font-family: 'Playfair Display', serif;
+  display: block;
+}
+
+.stat-item .etiqueta-stat {
+  font-size: 12px;
+  color: var(--gris);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.nosotros-cta {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+}
+
+@media (max-width: 960px) {
+  .nosotros-interior {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+}

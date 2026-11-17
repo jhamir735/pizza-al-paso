@@ -1,0 +1,992 @@
+/* ==========================================================================
+   ESTILOS: CAJA (POS) - SISTEMA DE COBROS Y CONTROL DE PEDIDOS
+   Paleta: Rojo (#b31b26), Dorado (#f59e0b), Crema (#f4ede4 / #fffdf9), Oscuro (#1c1917)
+   Tipografía: Playfair Display + DM Sans
+   ========================================================================== */
+
+:root {
+  --rojo: #b31b26;
+  --rojo-oscuro: #8f141d;
+  --dorado: #f59e0b;
+  --dorado-oscuro: #d97706;
+  --crema: #f4ede4;
+  --crema-suave: #fffdf9;
+  --oscuro: #1c1917;
+  --gris: #78716c;
+  --borde: #e7dfd5;
+  --verde: #16a34a;
+  --verde-fondo: #dcfce7;
+  --azul: #2563eb;
+  --azul-fondo: #dbeafe;
+  --morado: #7c3aed;
+  --morado-fondo: #f3e8ff;
+  --naranja-fondo: #ffedd5;
+  --sombras: 0 4px 20px rgba(28, 25, 23, 0.08);
+  --sombras-lg: 0 12px 35px rgba(28, 25, 23, 0.15);
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  background-color: #f7f3ee;
+  color: var(--oscuro);
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* ═══════════════════════════════════════════════
+   1. CABECERA DE LA CAJA (POS)
+   ═══════════════════════════════════════════════ */
+.caja-header {
+  background: var(--oscuro);
+  color: #fff;
+  padding: 14px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 3px solid var(--dorado);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.25);
+}
+
+.caja-logo-area {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.caja-logo-icono {
+  width: 44px;
+  height: 44px;
+  background: linear-gradient(135deg, var(--rojo), var(--dorado));
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  box-shadow: 0 2px 8px rgba(245, 158, 11, 0.35);
+}
+
+.caja-titulos h1 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 20px;
+  font-weight: 700;
+  letter-spacing: -0.3px;
+  color: #fff;
+}
+
+.caja-titulos small {
+  color: #d6d3d1;
+  font-size: 12px;
+  display: block;
+}
+
+.caja-header-der {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.caja-reloj {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-family: monospace;
+  font-size: 14px;
+  color: var(--dorado);
+  font-weight: 600;
+  letter-spacing: 1px;
+}
+
+.btn-caja-nav {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 14px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  border-radius: 8px;
+  color: #fff;
+  text-decoration: none;
+  font-size: 13px;
+  font-weight: 600;
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.btn-caja-nav:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: translateY(-1px);
+}
+
+.btn-caja-arqueo {
+  background: linear-gradient(135deg, var(--dorado), var(--dorado-oscuro));
+  color: var(--oscuro);
+  border: none;
+  font-weight: 700;
+}
+
+.btn-caja-arqueo:hover {
+  background: var(--dorado);
+  color: #000;
+}
+
+/* ═══════════════════════════════════════════════
+   2. BARRA DE MÉTRICAS / ARQUEO RÁPIDO
+   ═══════════════════════════════════════════════ */
+.caja-metricas-bar {
+  background: #fff;
+  border-bottom: 1px solid var(--borde);
+  padding: 16px 28px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 16px;
+}
+
+.tarjeta-caja-metrica {
+  background: var(--crema-suave);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  padding: 14px 18px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tarjeta-caja-metrica:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sombras);
+}
+
+.icono-metrica-caja {
+  width: 44px;
+  height: 44px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+}
+
+.icono-metrica-caja.naranja {
+  background: var(--naranja-fondo);
+  color: var(--dorado-oscuro);
+}
+
+.icono-metrica-caja.verde {
+  background: var(--verde-fondo);
+  color: var(--verde);
+}
+
+.icono-metrica-caja.azul {
+  background: var(--azul-fondo);
+  color: var(--azul);
+}
+
+.icono-metrica-caja.morado {
+  background: var(--morado-fondo);
+  color: var(--morado);
+}
+
+.info-metrica-caja small {
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  color: var(--gris);
+  font-weight: 700;
+  display: block;
+  margin-bottom: 2px;
+}
+
+.info-metrica-caja strong {
+  font-size: 20px;
+  color: var(--oscuro);
+  font-weight: 700;
+}
+
+/* ═══════════════════════════════════════════════
+   3. BARRA DE FILTROS Y BÚSQUEDA
+   ═══════════════════════════════════════════════ */
+.caja-filtros-bar {
+  padding: 16px 28px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.caja-filtros-estados {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.chip-filtro-caja {
+  padding: 8px 16px;
+  border-radius: 999px;
+  border: 1px solid var(--borde);
+  background: #fff;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--oscuro);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.chip-filtro-caja:hover {
+  background: var(--crema);
+  border-color: #d1c7ba;
+}
+
+.chip-filtro-caja.activo {
+  background: var(--rojo);
+  color: #fff;
+  border-color: var(--rojo);
+  box-shadow: 0 2px 8px rgba(179, 27, 38, 0.25);
+}
+
+.chip-filtro-caja .insignia-conteo {
+  background: rgba(0, 0, 0, 0.08);
+  padding: 2px 7px;
+  border-radius: 999px;
+  font-size: 11px;
+}
+
+.chip-filtro-caja.activo .insignia-conteo {
+  background: rgba(255, 255, 255, 0.25);
+  color: #fff;
+}
+
+.caja-busqueda-grupo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.caja-buscador {
+  padding: 9px 14px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  font-size: 13px;
+  background: #fff;
+  min-width: 240px;
+  color: var(--oscuro);
+  outline: none;
+}
+
+.caja-buscador:focus {
+  border-color: var(--rojo);
+  box-shadow: 0 0 0 3px rgba(179, 27, 38, 0.1);
+}
+
+.caja-selector-mesa {
+  padding: 9px 14px;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  font-size: 13px;
+  background: #fff;
+  color: var(--oscuro);
+  font-weight: 600;
+  outline: none;
+  cursor: pointer;
+}
+
+/* ═══════════════════════════════════════════════
+   4. GRILLA DE COMANDAS / CUENTAS
+   ═══════════════════════════════════════════════ */
+.caja-contenedor {
+  padding: 0 28px 40px;
+  flex: 1;
+}
+
+.grilla-comandas-caja {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  gap: 20px;
+}
+
+/* Tarjeta individual de comanda */
+.tarjeta-cuenta {
+  background: #fff;
+  border: 1px solid var(--borde);
+  border-radius: 14px;
+  box-shadow: var(--sombras);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.tarjeta-cuenta:hover {
+  transform: translateY(-3px);
+  box-shadow: var(--sombras-lg);
+}
+
+.tarjeta-cuenta.pendiente {
+  border-left: 6px solid var(--dorado);
+}
+
+.tarjeta-cuenta.pagado {
+  border-left: 6px solid var(--verde);
+  opacity: 0.92;
+}
+
+/* Encabezado tarjeta */
+.cuenta-cabecera {
+  padding: 16px 18px 12px;
+  border-bottom: 1px dashed var(--borde);
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  background: var(--crema-suave);
+}
+
+.cuenta-mesa-codigo {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cuenta-badge-mesa {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--oscuro);
+}
+
+.cuenta-codigo {
+  font-size: 12px;
+  color: var(--gris);
+  font-family: monospace;
+}
+
+.cuenta-badges-estado {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 4px;
+}
+
+.badge-pago {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 4px 10px;
+  border-radius: 999px;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.badge-pago.pendiente {
+  background: var(--naranja-fondo);
+  color: #c2410c;
+}
+
+.badge-pago.pagado {
+  background: var(--verde-fondo);
+  color: var(--verde);
+}
+
+.badge-cocina-ref {
+  font-size: 11px;
+  color: var(--gris);
+  font-weight: 600;
+}
+
+/* Info comensal */
+.cuenta-info-cliente {
+  padding: 10px 18px;
+  background: #fff;
+  border-bottom: 1px solid #f1ebe1;
+  font-size: 12px;
+  color: var(--gris);
+  display: flex;
+  justify-content: space-between;
+}
+
+.cuenta-info-cliente strong {
+  color: var(--oscuro);
+}
+
+/* Lista de ítems */
+.cuenta-items-lista {
+  padding: 14px 18px;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  max-height: 220px;
+  overflow-y: auto;
+}
+
+.cuenta-item-fila {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  line-height: 1.4;
+}
+
+.cuenta-item-cant-nombre {
+  display: flex;
+  gap: 8px;
+}
+
+.cuenta-item-cant {
+  font-weight: 700;
+  color: var(--rojo);
+  width: 20px;
+}
+
+.cuenta-item-nombre {
+  color: var(--oscuro);
+  font-weight: 500;
+}
+
+.cuenta-item-precio {
+  font-weight: 600;
+  color: var(--oscuro);
+  white-space: nowrap;
+}
+
+/* Desglose financiero */
+.cuenta-desglose {
+  padding: 12px 18px;
+  background: var(--crema-suave);
+  border-top: 1px dashed var(--borde);
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.cuenta-fila-desglose {
+  display: flex;
+  justify-content: space-between;
+  font-size: 12px;
+  color: var(--gris);
+}
+
+.cuenta-fila-total {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 4px;
+  padding-top: 6px;
+  border-top: 1px solid var(--borde);
+}
+
+.cuenta-fila-total span {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--oscuro);
+}
+
+.cuenta-fila-total strong {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--rojo);
+}
+
+/* Acciones en pie de tarjeta */
+.cuenta-acciones {
+  padding: 14px 18px;
+  border-top: 1px solid var(--borde);
+  background: #fff;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.btn-cobrar-pos {
+  width: 100%;
+  padding: 12px;
+  background: linear-gradient(135deg, var(--verde), #15803d);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  box-shadow: 0 3px 10px rgba(22, 163, 74, 0.25);
+  transition: all 0.2s ease;
+}
+
+.btn-cobrar-pos:hover {
+  background: #15803d;
+  transform: translateY(-1px);
+  box-shadow: 0 5px 14px rgba(22, 163, 74, 0.35);
+}
+
+.btn-ver-boleta {
+  width: 100%;
+  padding: 10px;
+  background: #fff;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--oscuro);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  transition: all 0.2s ease;
+}
+
+.btn-ver-boleta:hover {
+  background: var(--crema);
+  border-color: #d1c7ba;
+}
+
+.cuenta-info-pagada {
+  font-size: 12px;
+  color: var(--verde);
+  font-weight: 600;
+  text-align: center;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 4px 0;
+}
+
+/* Estado Vacío */
+.caja-vacio {
+  text-align: center;
+  padding: 80px 20px;
+  color: var(--gris);
+  grid-column: 1 / -1;
+  background: #fff;
+  border-radius: 14px;
+  border: 2px dashed var(--borde);
+}
+
+.caja-vacio-icono {
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+.caja-vacio h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 20px;
+  color: var(--oscuro);
+  margin-bottom: 6px;
+}
+
+/* ═══════════════════════════════════════════════
+   5. MODAL DE COBRO (PROCESAR PAGO)
+   ═══════════════════════════════════════════════ */
+.modal-caja-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(28, 25, 23, 0.65);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+  padding: 20px;
+}
+
+.modal-caja-card {
+  background: #fff;
+  width: 100%;
+  max-width: 540px;
+  border-radius: 16px;
+  box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  animation: popIn 0.25s ease-out;
+}
+
+@keyframes popIn {
+  from { opacity: 0; transform: scale(0.95); }
+  to { opacity: 1; transform: scale(1); }
+}
+
+.modal-caja-header {
+  background: var(--oscuro);
+  color: #fff;
+  padding: 18px 24px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.modal-caja-header h3 {
+  font-family: 'Playfair Display', Georgia, serif;
+  font-size: 19px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modal-caja-close {
+  background: transparent;
+  border: none;
+  color: #a8a29e;
+  font-size: 24px;
+  cursor: pointer;
+  line-height: 1;
+}
+
+.modal-caja-close:hover {
+  color: #fff;
+}
+
+.modal-caja-body {
+  padding: 24px;
+  max-height: 80vh;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* Banner de total a cobrar */
+.banner-monto-cobro {
+  background: linear-gradient(135deg, var(--crema-suave), #f1ebe1);
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  padding: 16px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.banner-monto-cobro small {
+  font-size: 12px;
+  text-transform: uppercase;
+  color: var(--gris);
+  font-weight: 700;
+  display: block;
+}
+
+.banner-monto-cobro strong {
+  font-size: 28px;
+  color: var(--rojo);
+  font-weight: 700;
+}
+
+/* Selector método de pago */
+.metodos-pago-selector {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+}
+
+.metodo-pago-btn {
+  padding: 12px 10px;
+  border: 2px solid var(--borde);
+  border-radius: 10px;
+  background: #fff;
+  cursor: pointer;
+  text-align: center;
+  font-weight: 600;
+  font-size: 13px;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.metodo-pago-btn span.emoji {
+  font-size: 22px;
+}
+
+.metodo-pago-btn:hover {
+  border-color: var(--dorado);
+  background: var(--crema-suave);
+}
+
+.metodo-pago-btn.activo {
+  border-color: var(--rojo);
+  background: #fff7f7;
+  color: var(--rojo);
+}
+
+/* Caja de Efectivo y Vuelto */
+.seccion-efectivo {
+  background: #fcfbf9;
+  border: 1px solid var(--borde);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.billetes-rapidos {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.btn-billete {
+  padding: 6px 12px;
+  background: #fff;
+  border: 1px solid var(--borde);
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.btn-billete:hover {
+  background: var(--crema);
+  border-color: #c9bea9;
+}
+
+.campo-vuelto-grupo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+}
+
+.campo-vuelto-grupo label {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--gris);
+  margin-bottom: 4px;
+  display: block;
+}
+
+.input-monto-recibido {
+  width: 100%;
+  padding: 10px 14px;
+  font-size: 18px;
+  font-weight: 700;
+  border: 2px solid var(--borde);
+  border-radius: 8px;
+  outline: none;
+}
+
+.input-monto-recibido:focus {
+  border-color: var(--rojo);
+}
+
+.box-vuelto {
+  padding: 10px 14px;
+  background: var(--verde-fondo);
+  border: 1px solid #bbf7d0;
+  border-radius: 8px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+}
+
+.box-vuelto small {
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--verde);
+  text-transform: uppercase;
+}
+
+.box-vuelto strong {
+  font-size: 20px;
+  color: #15803d;
+}
+
+/* Comprobante Fiscal */
+.tipo-comprobante-grupo {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.tipo-comprobante-grupo label {
+  font-size: 13px;
+  font-weight: 600;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+}
+
+.modal-caja-footer {
+  padding: 16px 24px;
+  background: #f7f3ee;
+  border-top: 1px solid var(--borde);
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+}
+
+.btn-cancelar {
+  padding: 10px 18px;
+  background: transparent;
+  border: 1px solid var(--borde);
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 13px;
+  color: var(--gris);
+  cursor: pointer;
+}
+
+.btn-cancelar:hover {
+  background: #e7dfd5;
+}
+
+.btn-confirmar-pago {
+  padding: 12px 24px;
+  background: var(--verde);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 14px;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  box-shadow: 0 4px 12px rgba(22, 163, 74, 0.3);
+}
+
+.btn-confirmar-pago:hover {
+  background: #15803d;
+}
+
+/* ═══════════════════════════════════════════════
+   6. TICKET TÉRMICO IMPRIMIBLE (BOLETA FISCAL)
+   ═══════════════════════════════════════════════ */
+.ticket-termico {
+  background: #fff;
+  font-family: 'Courier New', Courier, monospace;
+  padding: 24px;
+  width: 100%;
+  max-width: 360px;
+  margin: 0 auto;
+  border: 1px solid #d6d3d1;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.1);
+  color: #000;
+  line-height: 1.35;
+}
+
+.ticket-header {
+  text-align: center;
+  margin-bottom: 12px;
+}
+
+.ticket-header h4 {
+  font-size: 16px;
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.ticket-header p {
+  font-size: 11px;
+}
+
+.ticket-separador {
+  border-top: 1px dashed #000;
+  margin: 8px 0;
+}
+
+.ticket-datos-fiscales {
+  font-size: 11px;
+  margin-bottom: 8px;
+}
+
+.ticket-tabla-items {
+  width: 100%;
+  font-size: 11px;
+  border-collapse: collapse;
+}
+
+.ticket-tabla-items th {
+  text-align: left;
+  border-bottom: 1px solid #000;
+  padding: 4px 0;
+}
+
+.ticket-tabla-items td {
+  padding: 4px 0;
+}
+
+.ticket-tabla-items td.num {
+  text-align: right;
+}
+
+.ticket-totales {
+  font-size: 12px;
+  margin-top: 8px;
+}
+
+.ticket-totales .fila {
+  display: flex;
+  justify-content: space-between;
+  padding: 2px 0;
+}
+
+.ticket-totales .fila.gran-total {
+  font-weight: 700;
+  font-size: 14px;
+  border-top: 1px dashed #000;
+  border-bottom: 1px dashed #000;
+  padding: 4px 0;
+  margin: 4px 0;
+}
+
+.ticket-footer {
+  text-align: center;
+  font-size: 10px;
+  margin-top: 12px;
+}
+
+/* ═══════════════════════════════════════════════
+   7. RESPONSIVIDAD
+   ═══════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .caja-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+    padding: 14px 18px;
+  }
+
+  .caja-header-der {
+    width: 100%;
+    justify-content: space-between;
+    flex-wrap: wrap;
+  }
+
+  .caja-metricas-bar,
+  .caja-filtros-bar,
+  .caja-contenedor {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+
+  .caja-busqueda-grupo {
+    width: 100%;
+  }
+
+  .caja-buscador {
+    flex: 1;
+    min-width: 0;
+  }
+}

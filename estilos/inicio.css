@@ -1,0 +1,222 @@
+/* ============================================================
+   INICIO.CSS — Estilos Específicos de la Portada / Inicio
+   Hero split-screen, grid de beneficios, llamada a la acción
+   ============================================================ */
+
+.seccion-hero {
+  min-height: calc(100vh - var(--alto-nav));
+  display: grid;
+  grid-template-columns: 1.1fr 0.9fr;
+  align-items: center;
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(135deg, #1f1917 0%, #3a2720 50%, #2a1f1b 100%);
+}
+
+.hero-fondo-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse at 15% 40%, rgba(179,27,38,0.25) 0%, transparent 60%),
+    radial-gradient(ellipse at 85% 85%, rgba(245,158,11,0.18) 0%, transparent 50%);
+  pointer-events: none;
+}
+
+.hero-contenido {
+  position: relative;
+  z-index: 2;
+  padding: 80px 40px 80px 80px;
+  max-width: 680px;
+}
+
+.hero-etiqueta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.12);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255,255,255,0.18);
+  color: #fcd34d;
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  padding: 6px 16px;
+  border-radius: var(--radio-pill);
+  margin-bottom: 22px;
+}
+
+.hero-contenido h1 {
+  color: #ffffff;
+  font-size: clamp(38px, 4.8vw, 64px);
+  line-height: 1.1;
+  margin-bottom: 18px;
+}
+
+.hero-contenido h1 em {
+  color: #f87171;
+  font-style: italic;
+}
+
+.hero-contenido p {
+  color: #d6c7be;
+  font-size: 17px;
+  line-height: 1.65;
+  margin-bottom: 28px;
+  max-width: 520px;
+}
+
+.hero-insignias {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 32px;
+}
+
+.hero-insignia {
+  background: rgba(255,255,255,0.1);
+  border: 1px solid rgba(255,255,255,0.16);
+  color: #fef3c7;
+  padding: 7px 16px;
+  border-radius: var(--radio-sm);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.hero-botones-grupo {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+
+.hero-cta {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--rojo);
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 800;
+  padding: 16px 34px;
+  border-radius: var(--radio-sm);
+  box-shadow: 0 6px 20px rgba(179,27,38,0.38);
+  transition: var(--transicion);
+}
+
+.hero-cta:hover {
+  background: var(--rojo-hover);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgba(179,27,38,0.45);
+}
+
+.hero-cta-secundario {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  background: rgba(255,255,255,0.1);
+  border: 1.5px solid rgba(255,255,255,0.25);
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 800;
+  padding: 14px 26px;
+  border-radius: var(--radio-sm);
+  transition: var(--transicion);
+}
+
+.hero-cta-secundario:hover {
+  background: rgba(255,255,255,0.2);
+  transform: translateY(-2px);
+}
+
+/* Tarjetas de Beneficios */
+.tarjetas-beneficios {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 16px;
+  margin-top: 36px;
+  max-width: 600px;
+}
+
+.tarjeta-beneficio {
+  background: rgba(255,255,255,0.08);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: var(--radio-md);
+  padding: 18px 14px;
+  text-align: center;
+  color: white;
+  transition: var(--transicion);
+}
+
+.tarjeta-beneficio:hover {
+  background: rgba(255,255,255,0.14);
+  transform: translateY(-2px);
+}
+
+.tarjeta-beneficio .icono-grande {
+  font-size: 28px;
+  margin-bottom: 6px;
+}
+
+.tarjeta-beneficio strong {
+  display: block;
+  font-size: 14px;
+  margin-bottom: 2px;
+}
+
+.tarjeta-beneficio small {
+  font-size: 11px;
+  color: #d6c7be;
+}
+
+/* Imagen lateral Hero */
+.hero-imagen {
+  height: 100%;
+  min-height: 560px;
+  position: relative;
+  overflow: hidden;
+}
+
+.hero-imagen img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0.9;
+  filter: contrast(1.05) saturate(1.1);
+}
+
+.hero-imagen::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to right, rgba(31,25,23,0.7) 0%, transparent 45%);
+  z-index: 1;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .seccion-hero {
+    grid-template-columns: 1fr;
+    min-height: auto;
+  }
+  .hero-imagen {
+    height: 380px;
+    min-height: unset;
+  }
+  .hero-contenido {
+    padding: 60px 30px;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .hero-contenido h1 {
+    font-size: 34px;
+  }
+  .tarjetas-beneficios {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+}

@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#120e0d">
+  <title>Pizza al Paso | Pantalla de Cocina (KDS)</title>
+  <link rel="stylesheet" href="estilos/global.css">
+  <link rel="stylesheet" href="estilos/cocina.css">
+  <script>
+    // Si se abre desde file://, redirigir a localhost para compartir localStorage y BroadcastChannel
+    if (window.location.protocol === 'file:') {
+      window.location.replace('http://localhost:3000/cocina.html');
+    }
+  </script>
+</head>
+<body class="modo-cocina">
+
+  <!-- ══════════════ NAVBAR KDS (COCINA) ══════════════ -->
+  <header class="kds-navbar">
+    <div class="kds-nav-izq">
+      <!-- Logo Pizzería -->
+      <svg class="kds-logo" viewBox="0 0 100 100" fill="none">
+        <circle cx="50" cy="50" r="46" fill="#b31b26" stroke="#f59e0b" stroke-width="3"/>
+        <path d="M50 20 L74 68 C64 74 36 74 26 68 Z" fill="#f8eedb"/>
+        <path d="M24 67 C36 75 64 75 76 67 C74 72 62 78 50 78 C38 78 26 72 24 67 Z" fill="#d97706"/>
+        <path d="M48 30 L65 64 C58 67 42 67 35 64 Z" fill="#fcd34d"/>
+      </svg>
+      <div class="kds-titulo">
+        <h1>Pantalla de Cocina · Pizzeros</h1>
+        <small>Sistema KDS en Tiempo Real</small>
+      </div>
+      <div class="kds-status-pulsante">
+        <span class="pulso-verde"></span>
+        <span>Conectado al Horno</span>
+      </div>
+    </div>
+
+    <div class="kds-nav-der">
+      <div class="kds-reloj" id="relojCocina">12:00:00</div>
+      <a href="caja.html" class="btn-kds-nav" title="Ir al panel de caja y cobros">
+        <span>💵</span> Caja (POS)
+      </a>
+      <a href="admin.html" class="btn-kds-nav" title="Ir al panel administrador">
+        <span>⚙️</span> Admin
+      </a>
+      <a href="index.html" class="btn-kds-nav" title="Ver web de clientes">
+        <span>🌐</span> Tienda
+      </a>
+    </div>
+  </header>
+
+  <!-- ══════════════ BARRA DE FILTROS Y ESTADOS ══════════════ -->
+  <div class="kds-filtros-bar" id="kdsFiltrosBar">
+    <div class="kds-contadores">
+      <div class="chip-contador activo" data-estado="activos">
+        <span>🔥 Pedidos Activos:</span>
+        <span class="badge-num" id="countActivos">0</span>
+      </div>
+      <div class="chip-contador" data-estado="Recibido">
+        <span>📥 Nuevas Recibidas:</span>
+        <span class="badge-num" id="countRecibido" style="background:#d97706;">0</span>
+      </div>
+      <div class="chip-contador" data-estado="Al Horno">
+        <span>🔥 Al Horno a Leña:</span>
+        <span class="badge-num" id="countHorno" style="background:#dc2626;">0</span>
+      </div>
+      <div class="chip-contador" data-estado="En Mesa">
+        <span>🍕 Listas para Servir:</span>
+        <span class="badge-num" id="countMesa" style="background:#15803d;">0</span>
+      </div>
+      <div class="chip-contador" data-estado="todos">
+        <span>Historial Completo</span>
+      </div>
+    </div>
+
+    <div>
+      <button class="kds-sonido-btn" id="btnToggleSonido">
+        🔔 Sonido: Activado
+      </button>
+    </div>
+  </div>
+
+  <!-- ══════════════ GRILLA DE TICKETS KDS ══════════════ -->
+  <main class="kds-grid-tickets" id="gridTicketsKds">
+    <!-- Rellenado dinámicamente por scripts/cocina.js -->
+  </main>
+
+  <script src="scripts/api.js"></script>
+  <script src="scripts/cocina.js"></script>
+</body>
+</html>

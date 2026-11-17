@@ -1,0 +1,21 @@
+{
+  "name": "mvp-pizzeria",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node servidor.js",
+    "init-db": "node -e \"require('./db.js').inicializarBaseDatos().then(()=>process.exit(0))\"",
+    "test-jev": "node jev/test_jev.js",
+    "test": "node jev/test_jev.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.3.0",
+    "pg": "^8.23.1"
+  }
+}

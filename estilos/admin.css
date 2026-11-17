@@ -1,0 +1,490 @@
+/* ============================================================
+   ADMIN.CSS — Estilos del Panel de Control Administrativo
+   Pizza al Paso · Autenticación, Dashboard, Métricas y CRUD
+   ============================================================ */
+
+/* ═══════════════════════════════════════════════
+   PANTALLA DE LOGIN
+   ═══════════════════════════════════════════════ */
+.pantalla-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: radial-gradient(circle at 50% 30%, #2f231e 0%, #181210 100%);
+  position: relative;
+}
+
+.caja-login {
+  background: #fffdf9;
+  border-radius: var(--radio-lg);
+  width: 100%;
+  max-width: 440px;
+  padding: 40px 32px;
+  box-shadow: 0 24px 70px rgba(0,0,0,0.45);
+  border: 1px solid rgba(255,255,255,0.1);
+  text-align: center;
+  animation: entradaLogin 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes entradaLogin {
+  from { transform: scale(0.94) translateY(20px); opacity: 0; }
+  to   { transform: scale(1) translateY(0); opacity: 1; }
+}
+
+.login-emblema {
+  width: 72px;
+  height: 72px;
+  margin: 0 auto 16px;
+  filter: drop-shadow(0 6px 14px rgba(179,27,38,0.35));
+}
+
+.caja-login h2 {
+  font-size: 26px;
+  margin-bottom: 6px;
+  color: var(--oscuro);
+}
+
+.caja-login p {
+  font-size: 14px;
+  color: var(--gris);
+  margin-bottom: 24px;
+}
+
+.login-credenciales-demo {
+  background: #fbf5ee;
+  border: 1px dashed var(--dorado);
+  border-radius: var(--radio-sm);
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #92400e;
+  line-height: 1.5;
+  margin-bottom: 20px;
+  text-align: left;
+}
+
+.login-credenciales-demo strong {
+  display: block;
+  font-size: 13px;
+  margin-bottom: 2px;
+}
+
+.login-form .campo-formulario {
+  text-align: left;
+}
+
+.login-volver-enlace {
+  display: inline-block;
+  margin-top: 18px;
+  font-size: 13px;
+  color: var(--gris);
+  font-weight: 700;
+  transition: var(--transicion);
+}
+
+.login-volver-enlace:hover {
+  color: var(--rojo);
+}
+
+/* ═══════════════════════════════════════════════
+   PANEL ADMINISTRATIVO (DASHBOARD)
+   ═══════════════════════════════════════════════ */
+.pantalla-admin {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background-color: #f7f1ea;
+}
+
+/* Header del Admin */
+.admin-navbar {
+  background: #1f1917;
+  color: white;
+  padding: 0 24px;
+  height: 70px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #382e2b;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--sombra-md);
+}
+
+.admin-nav-izq {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.admin-badge {
+  background: var(--rojo);
+  color: white;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  padding: 4px 10px;
+  border-radius: var(--radio-pill);
+}
+
+.admin-nav-der {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.btn-admin-tienda {
+  background: rgba(255,255,255,0.12);
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: var(--radio-pill);
+  transition: var(--transicion);
+}
+
+.btn-admin-tienda:hover {
+  background: rgba(255,255,255,0.22);
+}
+
+.btn-admin-logout {
+  background: #dc2626;
+  color: white;
+  font-size: 13px;
+  font-weight: 700;
+  padding: 8px 16px;
+  border-radius: var(--radio-pill);
+  transition: var(--transicion);
+}
+
+.btn-admin-logout:hover {
+  background: #b91c1c;
+}
+
+/* Pestañas de navegación interna */
+.admin-tabs-bar {
+  background: white;
+  border-bottom: 1px solid var(--borde);
+  padding: 0 24px;
+}
+
+.admin-tabs-interior {
+  max-width: 1240px;
+  margin: 0 auto;
+  display: flex;
+  gap: 24px;
+}
+
+.admin-tab-btn {
+  background: none;
+  border: none;
+  padding: 16px 4px;
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--gris);
+  cursor: pointer;
+  position: relative;
+  transition: var(--transicion);
+}
+
+.admin-tab-btn:hover {
+  color: var(--rojo);
+}
+
+.admin-tab-btn.activo {
+  color: var(--rojo);
+}
+
+.admin-tab-btn.activo::after {
+  content: "";
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+  background: var(--rojo);
+  border-radius: 3px 3px 0 0;
+}
+
+/* Contenido Principal */
+.admin-contenedor {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: 32px 24px 60px;
+  width: 100%;
+  flex: 1;
+}
+
+.admin-seccion {
+  display: none;
+}
+
+.admin-seccion.activa {
+  display: block;
+}
+
+/* ═══════════════════════════════════════════════
+   TARJETAS DE MÉTRICAS (KPIs)
+   ═══════════════════════════════════════════════ */
+.grilla-metricas {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 20px;
+  margin-bottom: 32px;
+}
+
+.tarjeta-metrica {
+  background: white;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+  padding: 24px;
+  box-shadow: var(--sombra-sm);
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  transition: var(--transicion);
+}
+
+.tarjeta-metrica:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--sombra-md);
+}
+
+.metrica-icono {
+  width: 52px;
+  height: 52px;
+  border-radius: var(--radio-sm);
+  background: var(--rojo-suave);
+  color: var(--rojo);
+  font-size: 26px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.metrica-icono.verde {
+  background: #ecfdf5;
+  color: #15803d;
+}
+
+.metrica-icono.dorado {
+  background: #fffbeb;
+  color: #b45309;
+}
+
+.metrica-info small {
+  font-size: 12px;
+  color: var(--gris);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.metrica-info strong {
+  display: block;
+  font-size: 28px;
+  color: var(--oscuro);
+  font-family: 'Playfair Display', serif;
+  margin-top: 4px;
+}
+
+/* ═══════════════════════════════════════════════
+   TABLAS Y TARJETAS DEL DASHBOARD
+   ═══════════════════════════════════════════════ */
+.admin-card-bloque {
+  background: white;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-md);
+  box-shadow: var(--sombra-sm);
+  overflow: hidden;
+  margin-bottom: 32px;
+}
+
+.admin-card-header {
+  padding: 20px 24px;
+  border-bottom: 1px solid var(--borde-claro);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.admin-card-header h3 {
+  font-size: 19px;
+  margin: 0;
+}
+
+.admin-card-header p {
+  font-size: 13px;
+  color: var(--gris);
+  margin-top: 2px;
+}
+
+.tabla-responsiva {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.admin-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 14px;
+}
+
+.admin-tabla th {
+  background: #fbf8f4;
+  padding: 14px 20px;
+  font-weight: 700;
+  color: var(--oscuro-suave);
+  border-bottom: 1px solid var(--borde);
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.admin-tabla td {
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--borde-claro);
+  vertical-align: middle;
+}
+
+.admin-tabla tr:hover {
+  background: #fffdf9;
+}
+
+/* Miniatura en tabla de productos */
+.prod-mini-thumb {
+  width: 48px;
+  height: 48px;
+  border-radius: 6px;
+  object-fit: cover;
+  background: #f1dfca;
+  display: block;
+}
+
+/* Badges de estado en pedidos */
+.badge-estado {
+  display: inline-block;
+  padding: 4px 10px;
+  border-radius: var(--radio-pill);
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+
+.badge-estado.recibido {
+  background: #fef3c7;
+  color: #92400e;
+}
+
+.badge-estado.horno {
+  background: #fee2e2;
+  color: #991b1b;
+}
+
+.badge-estado.mesa {
+  background: #e0e7ff;
+  color: #3730a3;
+}
+
+.badge-estado.entregado {
+  background: #dcfce7;
+  color: #166534;
+}
+
+/* Select de cambio rápido de estado */
+.select-estado-kds {
+  padding: 6px 10px;
+  border: 1px solid var(--borde);
+  border-radius: var(--radio-sm);
+  font-size: 12px;
+  font-weight: 700;
+  background: white;
+  cursor: pointer;
+}
+
+/* Botones de acción en tabla */
+.btn-accion-icono {
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  transition: var(--transicion);
+  cursor: pointer;
+}
+
+.btn-accion-icono.editar {
+  background: var(--rojo-suave);
+  color: var(--rojo);
+  border: 1px solid rgba(179,27,38,0.2);
+}
+
+.btn-accion-icono.editar:hover {
+  background: var(--rojo);
+  color: white;
+}
+
+.btn-accion-icono.eliminar {
+  background: #fee2e2;
+  color: #b91c1c;
+  border: 1px solid #fecaca;
+  margin-left: 6px;
+}
+
+.btn-accion-icono.eliminar:hover {
+  background: #b91c1c;
+  color: white;
+}
+
+.btn-accion-icono.atender {
+  background: #dcfce7;
+  color: #166534;
+  border: 1px solid #bbf7d0;
+}
+
+.btn-accion-icono.atender:hover {
+  background: #166534;
+  color: white;
+}
+
+/* Preview de imagen en modal */
+.img-preview-box {
+  width: 100%;
+  height: 160px;
+  border-radius: var(--radio-sm);
+  background: #f1dfca;
+  overflow: hidden;
+  margin-top: 8px;
+  border: 1px solid var(--borde);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.img-preview-box img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.img-preview-box span {
+  font-size: 13px;
+  color: var(--gris);
+}
+
+@media (max-width: 768px) {
+  .admin-navbar {
+    padding: 0 16px;
+  }
+  .admin-tabs-interior {
+    gap: 12px;
+  }
+  .admin-tab-btn {
+    font-size: 13px;
+  }
+}

@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Caja (POS) · Pizzería al Paso</title>
+  <meta name="description" content="Terminal de punto de venta (POS) para control de pedidos, cobros presenciales y emisión de comprobantes fiscales de Pizzería al Paso.">
+  <script>
+    if (window.location.protocol === 'file:') {
+      window.location.replace('http://localhost:3000/caja.html');
+    }
+  </script>
+  <!-- Tipografías de Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,400;0,9..40,600;0,9..40,700;1,9..40,400&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
+  
+  <!-- Estilos dedicados de Caja POS -->
+  <link rel="stylesheet" href="estilos/caja.css">
+</head>
+<body>
+
+  <!-- ═══════════════════════════════════════════════
+       1. CABECERA DEL TERMINAL DE CAJA (POS)
+       ═══════════════════════════════════════════════ -->
+  <header class="caja-header">
+    <div class="caja-logo-area">
+      <div class="caja-logo-icono">💵</div>
+      <div class="caja-titulos">
+        <h1>Pizzería al Paso · Terminal de Caja (POS)</h1>
+        <small>Control de Cuentas, Cobros en Mesa / Mostrador y Boletas</small>
+      </div>
+    </div>
+
+    <div class="caja-header-der">
+      <div class="caja-reloj" id="relojCaja">12:00:00</div>
+      
+      <button class="btn-caja-nav btn-caja-arqueo" onclick="abrirModalArqueoCaja()" title="Ver resumen y arqueo del turno">
+        <span>💰</span> Arqueo de Caja
+      </button>
+
+      <a href="cocina.html" target="_blank" class="btn-caja-nav" title="Ver KDS de Cocina">
+        <span>🔥</span> Cocina (KDS)
+      </a>
+
+      <a href="admin.html" target="_blank" class="btn-caja-nav" title="Panel de Administración">
+        <span>⚙️</span> Admin
+      </a>
+
+      <a href="index.html" target="_blank" class="btn-caja-nav" title="Ver Tienda Online / Carta QR">
+        <span>🌐</span> Carta QR
+      </a>
+    </div>
+  </header>
+
+  <!-- ═══════════════════════════════════════════════
+       2. BARRA DE MÉTRICAS / RESUMEN EN VIVO
+       ═══════════════════════════════════════════════ -->
+  <section class="caja-metricas-bar">
+    <div class="tarjeta-caja-metrica">
+      <div class="icono-metrica-caja naranja">⏳</div>
+      <div class="info-metrica-caja">
+        <small>Por Cobrar en Mesa</small>
+        <strong id="metricaMontoPendiente">S/ 0.00</strong>
+        <span id="metricaCantPendiente" style="font-size: 11px; color: var(--gris); display:block;">0 pedidos</span>
+      </div>
+    </div>
+
+    <div class="tarjeta-caja-metrica">
+      <div class="icono-metrica-caja verde">✅</div>
+      <div class="info-metrica-caja">
+        <small>Cobradas con Éxito</small>
+        <strong id="metricaMontoCobrado">S/ 0.00</strong>
+        <span id="metricaCantCobrado" style="font-size: 11px; color: var(--gris); display:block;">0 pagadas</span>
+      </div>
+    </div>
+
+    <div class="tarjeta-caja-metrica">
+      <div class="icono-metrica-caja azul">💵</div>
+      <div class="info-metrica-caja">
+        <small>Efectivo en Gaveta</small>
+        <strong id="metricaEfectivoTotal">S/ 0.00</strong>
+        <span style="font-size: 11px; color: var(--gris); display:block;">Cobros en efectivo</span>
+      </div>
+    </div>
+
+    <div class="tarjeta-caja-metrica">
+      <div class="icono-metrica-caja morado">💳</div>
+      <div class="info-metrica-caja">
+        <small>Tarjetas / Yape / Plin</small>
+        <strong id="metricaDigitalTotal">S/ 0.00</strong>
+        <span style="font-size: 11px; color: var(--gris); display:block;">POS y Billeteras digitales</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       3. BARRA DE FILTROS Y BÚSQUEDA
+       ═══════════════════════════════════════════════ -->
+  <section class="caja-filtros-bar">
+    <div class="caja-filtros-estados">
+      <button class="chip-filtro-caja activo" data-filtro="pendientes">
+        <span>⏳ Pendientes de Pago</span>
+        <span class="insignia-conteo" id="badgeFiltroPendientes">0</span>
+      </button>
+      <button class="chip-filtro-caja" data-filtro="pagados">
+        <span>✅ Pedidos Pagados</span>
+        <span class="insignia-conteo" id="badgeFiltroPagados">0</span>
+      </button>
+      <button class="chip-filtro-caja" data-filtro="todos">
+        <span>📋 Todos los Pedidos</span>
+        <span class="insignia-conteo" id="badgeFiltroTodos">0</span>
+      </button>
+    </div>
+
+    <div class="caja-busqueda-grupo">
+      <select class="caja-selector-mesa" id="cajaSelectorMesa" aria-label="Filtrar por mesa">
+        <option value="todas">📍 Todas las Mesas</option>
+        <option value="Mesa 1">Mesa 1 (Salón Principal)</option>
+        <option value="Mesa 2">Mesa 2 (Ventana)</option>
+        <option value="Mesa 3">Mesa 3 (Terraza)</option>
+        <option value="Mesa 4">Mesa 4 (Familiar)</option>
+        <option value="Mesa 5">Mesa 5 (Zona VIP)</option>
+      </select>
+
+      <input type="text" class="caja-buscador" id="cajaBuscador" placeholder="🔍 Buscar por mesa, código (#PZ) o cliente..." aria-label="Buscar pedido">
+    </div>
+  </section>
+
+  <!-- ═══════════════════════════════════════════════
+       4. GRILLA DE PEDIDOS / CUENTAS
+       ═══════════════════════════════════════════════ -->
+  <main class="caja-contenedor">
+    <div class="grilla-comandas-caja" id="grillaComandasCaja">
+      <!-- Rellenado dinámicamente por scripts/caja.js -->
+    </div>
+  </main>
+
+  <!-- ═══════════════════════════════════════════════
+       5. MODAL DE COBRO (PROCESAR PAGO POS)
+       ═══════════════════════════════════════════════ -->
+  <div class="modal-caja-overlay" id="modalCobroCaja" style="display: none;">
+    <div class="modal-caja-card">
+      <div class="modal-caja-header">
+        <h3><span>💳</span> Cobrar Pedido</h3>
+        <button class="modal-caja-close" onclick="cerrarModalCobro()">×</button>
+      </div>
+
+      <div class="modal-caja-body">
+        <div class="banner-monto-cobro">
+          <div>
+            <small id="cobroMesaCodigo">Mesa 1 · #PZ-101</small>
+            <span style="font-size:13px; color:var(--gris);">Importe Total a Pagar:</span>
+          </div>
+          <strong id="cobroMontoTotal">S/ 0.00</strong>
+        </div>
+
+        <div>
+          <label style="font-size:12px; font-weight:700; color:var(--gris); margin-bottom:8px; display:block;">SELECCIONA EL MÉTODO DE COBRO:</label>
+          <div class="metodos-pago-selector">
+            <button class="metodo-pago-btn activo" data-metodo="Efectivo">
+              <span class="emoji">💵</span>
+              <span>Efectivo</span>
+            </button>
+            <button class="metodo-pago-btn" data-metodo="Tarjeta">
+              <span class="emoji">💳</span>
+              <span>Tarjeta / POS</span>
+            </button>
+            <button class="metodo-pago-btn" data-metodo="Yape">
+              <span class="emoji">📱</span>
+              <span>Yape / Plin</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Sección Efectivo: Calculadora de Vuelto -->
+        <div class="seccion-efectivo" id="seccionDetalleEfectivo">
+          <label style="font-size:12px; font-weight:700; color:var(--gris);">Billetes Rápidos:</label>
+          <div class="billetes-rapidos">
+            <button class="btn-billete" onclick="fijarMontoExacto()">Exacto</button>
+            <button class="btn-billete" onclick="agregarBillete(10)">+S/ 10</button>
+            <button class="btn-billete" onclick="agregarBillete(20)">+S/ 20</button>
+            <button class="btn-billete" onclick="agregarBillete(50)">+S/ 50</button>
+            <button class="btn-billete" onclick="agregarBillete(100)">+S/ 100</button>
+          </div>
+
+          <div class="campo-vuelto-grupo">
+            <div>
+              <label for="inputMontoRecibido">Monto Recibido (S/):</label>
+              <input type="number" step="0.50" id="inputMontoRecibido" class="input-monto-recibido" placeholder="0.00">
+            </div>
+            <div class="box-vuelto">
+              <small>Vuelto a Entregar:</small>
+              <strong id="txtVueltoCalculado">S/ 0.00</strong>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sección Tarjeta POS -->
+        <div id="seccionDetalleTarjeta" style="display:none; background:#fcfbf9; border:1px solid var(--borde); border-radius:12px; padding:16px;">
+          <label style="font-size:12px; font-weight:700; color:var(--gris); margin-bottom:6px; display:block;">Terminal Inalámbrico POS:</label>
+          <p style="font-size:13px; color:var(--oscuro); margin-bottom:10px;">Pase o inserte la tarjeta en el POS (Visa, Mastercard, Amex, Apple Pay).</p>
+          <input type="text" placeholder="N° de Operación / Voucher (Opcional)" style="width:100%; padding:10px; border:1px solid var(--borde); border-radius:8px; font-size:13px;">
+        </div>
+
+        <!-- Sección Yape / Plin -->
+        <div id="seccionDetalleYape" style="display:none; background:#fcfbf9; border:1px solid var(--borde); border-radius:12px; padding:16px; text-align:center;">
+          <span style="font-size:28px;">📱</span>
+          <h4 style="font-size:14px; margin:4px 0;">Yapear al: 987 654 321</h4>
+          <small style="color:var(--gris);">Titular: Pizzería al Paso S.A.C.</small>
+          <input type="text" placeholder="N° de confirmación Yape/Plin (Opcional)" style="width:100%; margin-top:10px; padding:10px; border:1px solid var(--borde); border-radius:8px; font-size:13px;">
+        </div>
+
+        <!-- Tipo de Comprobante -->
+        <div>
+          <label style="font-size:12px; font-weight:700; color:var(--gris); margin-bottom:8px; display:block;">EMITIR COMPROBANTE:</label>
+          <div class="tipo-comprobante-grupo">
+            <label>
+              <input type="radio" name="tipoComprobante" value="Boleta" checked>
+              <span>Boleta de Venta Electrónica</span>
+            </label>
+            <label>
+              <input type="radio" name="tipoComprobante" value="Factura">
+              <span>Factura Electrónica (RUC)</span>
+            </label>
+          </div>
+        </div>
+      </div>
+
+      <div class="modal-caja-footer">
+        <button class="btn-cancelar" onclick="cerrarModalCobro()">Cancelar</button>
+        <button class="btn-confirmar-pago" onclick="confirmarCobroComanda()">
+          <span>✓</span> Confirmar Cobro y Emitir
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       6. MODAL BOLETA FISCAL IMPRIMIBLE
+       ═══════════════════════════════════════════════ -->
+  <div class="modal-caja-overlay" id="modalBoletaFiscal" style="display: none;">
+    <div class="modal-caja-card" style="max-width: 420px;">
+      <div class="modal-caja-header">
+        <h3><span>🧾</span> Comprobante Emitido</h3>
+        <button class="modal-caja-close" onclick="cerrarModalBoleta()">×</button>
+      </div>
+
+      <div class="modal-caja-body" style="background:#e5e7eb; padding:20px;">
+        <div class="ticket-termico" id="cuerpoTicketTermico">
+          <!-- Rellenado por scripts/caja.js -->
+        </div>
+      </div>
+
+      <div class="modal-caja-footer">
+        <button class="btn-cancelar" onclick="cerrarModalBoleta()">Cerrar</button>
+        <button class="btn-confirmar-pago" onclick="imprimirComprobante()">
+          <span>🖨️</span> Imprimir Ticket
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════════
+       7. MODAL ARQUEO Y CIERRE DE CAJA
+       ═══════════════════════════════════════════════ -->
+  <div class="modal-caja-overlay" id="modalArqueoCaja" style="display: none;">
+    <div class="modal-caja-card" style="max-width: 480px;">
+      <div class="modal-caja-header">
+        <h3><span>💰</span> Arqueo del Turno de Caja</h3>
+        <button class="modal-caja-close" onclick="cerrarModalArqueoCaja()">×</button>
+      </div>
+
+      <div class="modal-caja-body" id="cuerpoArqueoCaja">
+        <!-- Rellenado por scripts/caja.js -->
+      </div>
+
+      <div class="modal-caja-footer">
+        <button class="btn-cancelar" onclick="cerrarModalArqueoCaja()">Cerrar</button>
+        <button class="btn-confirmar-pago" onclick="imprimirComprobante()">
+          <span>🖨️</span> Imprimir Arqueo
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts específicos de la Caja y API Neon -->
+  <script src="scripts/api.js"></script>
+  <script src="scripts/caja.js"></script>
+</body>
+</html>
