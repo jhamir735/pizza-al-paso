@@ -1,7 +1,7 @@
 const { Pool } = require('pg');
 
-// Cadena de conexión de Neon
-const connectionString = 'postgresql://neondb_owner:npg_UeQK9BlkPjN4@ep-odd-dust-bdh2627p-pooler.c-8.us-east-2.aws.neon.tech/neondb?sslmode=require';
+// Cadena de conexión de Neon (permite variable de entorno DATABASE_URL o fallback directo)
+const connectionString = process.env.DATABASE_URL || 'postgresql://neondb_owner:npg_UeQK9BlkPjN4@ep-odd-dust-bdh2627p-pooler.c-8.us-east-2.aws.neon.tech/neondb?sslmode=require';
 
 const pool = new Pool({
   connectionString,
