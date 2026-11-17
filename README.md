@@ -1,122 +1,124 @@
-# 🍕 Pizza al Paso — Sistema Web Autoservicio QR & Motor IA JEV
+# Pizza al Paso - Sistema Web de Autoservicio QR
 
-Plataforma gastronómica integral de autoservicio digital para restaurante/pizzería artesanal. Incluye carta digital con pedidos en mesa vía QR, pantalla de despacho para cocina (KDS), terminal de punto de venta y cobro (Caja POS), panel de administración comercial y base de datos relacional en la nube con **Neon PostgreSQL**.
+Sistema integral de autoservicio digital para restaurante y pizzeria. Desarrollado con arquitectura web desacoplada, incluye carta digital con pedidos mediante codigo QR en mesa, pantalla de despacho para cocina (KDS), terminal de punto de venta (POS) para control de cobros y facturacion, panel de administracion comercial y persistencia relacional en la nube mediante Neon PostgreSQL.
 
 ---
 
-## 🚀 Enlaces de Acceso Rápido (Servidor Local)
+## Modulos del Sistema
 
-Con el servidor backend iniciado (`http://localhost:3000`), accede directamente a cada módulo:
+Con el servidor backend en ejecucion, los modulos se encuentran accesibles en las siguientes rutas:
 
-| Módulo | Descripción | Enlace Directo |
+| Modulo | Descripcion | Ruta Local |
 | :--- | :--- | :--- |
-| 🏠 **Inicio** | Página principal de presentación y bienvenida | [http://localhost:3000](http://localhost:3000) |
-| 📱 **Menú QR (Clientes)** | Carta digital interactiva, selección de mesa, carrito y pedidos en vivo | [http://localhost:3000/paginas/menu.html](http://localhost:3000/paginas/menu.html) |
-| 🔥 **Cocina (KDS)** | Pantalla para pizzeros: tickets en tiempo real (*Recibido* ➔ *Al Horno* ➔ *En Mesa*) | [http://localhost:3000/cocina.html](http://localhost:3000/cocina.html) |
-| 💵 **Caja (POS)** | Control de cuentas por mesa, cobros (Efectivo / Yape / Tarjeta) y boletas fiscales | [http://localhost:3000/caja.html](http://localhost:3000/caja.html) |
-| ⚙️ **Administración** | Dashboard general de ventas, métricas, historial de pedidos y catálogo de productos | [http://localhost:3000/admin.html](http://localhost:3000/admin.html) |
-| ℹ️ **Nosotros** | Historia, concepto y filosofía gastronómica | [http://localhost:3000/paginas/nosotros.html](http://localhost:3000/paginas/nosotros.html) |
-| 📞 **Contacto** | Ubicación, horarios y formulario de reservas | [http://localhost:3000/paginas/contacto.html](http://localhost:3000/paginas/contacto.html) |
+| **Inicio** | Portal principal del restaurante | `http://localhost:3000` |
+| **Menu QR (Clientes)** | Carta digital interactiva, seleccion de mesa, carrito y envio de pedidos | `http://localhost:3000/paginas/menu.html` |
+| **Cocina (KDS)** | Pantalla para pizzeros y control de estados (Recibido, Al Horno, En Mesa) | `http://localhost:3000/cocina.html` |
+| **Caja (POS)** | Registro de cobros (Efectivo, Yape/Plin, Tarjetas) y emision de comprobantes | `http://localhost:3000/caja.html` |
+| **Administracion** | Panel de control de ventas, metricas, gestion de pedidos y catalogo | `http://localhost:3000/admin.html` |
+| **Nosotros** | Informacion institucional del restaurante | `http://localhost:3000/paginas/nosotros.html` |
+| **Contacto** | Ubicacion, canales de atencion y reservas | `http://localhost:3000/paginas/contacto.html` |
 
 ---
 
-## 🛠️ Cómo Ejecutar el Proyecto
+## Guia de Ejecucion
 
-### Opción 1: Un Solo Clic (Recomendado en Windows)
-Haz doble clic en el archivo:
+### Opcion 1: Ejecucion directa en Windows
+Ejecutar el archivo por lotes ubicado en la raiz:
 ```bash
 iniciar_servidor.bat
 ```
-Este script se ubica automáticamente en la carpeta del proyecto, verifica los componentes y arranca el backend en el puerto `3000`.
+El script se posiciona de forma automatica en el directorio del proyecto y levanta el servidor backend en el puerto 3000.
 
 ---
 
-### Opción 2: Desde la Terminal (PowerShell o CMD)
+### Opcion 2: Ejecucion por consola
 
-1. **Abrir la terminal e ingresar a la carpeta del proyecto:**
-   ```powershell
+1. Abrir la terminal y ubicarse en la carpeta del proyecto:
+   ```bash
    cd "MVP PIZZERIA"
    ```
 
-2. **Instalar dependencias (solo la primera vez):**
-   ```powershell
+2. Instalar las dependencias de Node.js:
+   ```bash
    npm install
    ```
 
-3. **Iniciar el servidor backend:**
-   ```powershell
+3. Iniciar el servidor:
+   ```bash
    node servidor.js
    ```
-   *(o también `npm start`)*
-
-4. **Confirmación en consola:**
-   ```text
-   🔗 Conectado a PostgreSQL Neon...
-   ✅ Tabla "productos" lista.
-   ✅ Tabla "pedidos" lista.
-   🍕 SERVIDOR PIZZERÍA AL PASO CONECTADO A NEON BD
-   🚀 Web local: http://localhost:3000
-   ⏳ Servidor activo. Presiona Ctrl+C para detenerlo.
+   o alternativamente:
+   ```bash
+   npm start
    ```
 
-5. Abre en tu navegador cualquiera de los enlaces indicados arriba.
+4. Salida esperada en consola:
+   ```text
+   Conectado a PostgreSQL Neon...
+   Tabla "productos" lista.
+   Tabla "pedidos" lista.
+   SERVIDOR PIZZERIA AL PASO CONECTADO A NEON BD
+   Web local: http://localhost:3000
+   Servidor activo. Presiona Ctrl+C para detenerlo.
+   ```
 
 ---
 
-## 🧠 Motor de Recomendaciones Inteligentes (JEV)
+## Motor de Recomendaciones JEV
 
-El proyecto incorpora el motor gastronómico **JEV** estructurado en tres componentes:
+El sistema cuenta con un motor algoritmico de sugerencias gastronomicas implementado en backend:
 
-1. **Reglas Contextuales:** Analiza variables de entorno (día de la semana, hora del servicio, composición actual de la comanda).
-2. **Market Basket Analysis (MBA):** Minería de patrones frecuentes de compra (*Support*, *Confidence* y *Lift*) conectada a los pedidos históricos reales de Neon PostgreSQL.
-3. **Clasificador Naive Bayes:** Estimación probabilística con suavizado de Laplace para clasificar perfiles de comensales (*Individual*, *Pareja*, *Familiar*, *Grupal*) y sugerir maridajes ideales.
+1. **Reglas Contextuales:** Evaluacion en tiempo de ejecucion segun variables temporales (dia de la semana, franja horaria) y composicion de la comanda actual.
+2. **Market Basket Analysis (MBA):** Mineria de patrones de compra frecuentes calculando metricas de Soporte (Support), Confianza (Confidence) y Elevacion (Lift) directamente sobre el historial transaccional en PostgreSQL.
+3. **Clasificador Probabilistico Naive Bayes:** Modelo bayesiano con suavizado de Laplace para estimar la tipologia de consumo (Individual, Pareja, Familiar o Grupal) y predecir maridajes de acompañamientos y bebidas.
 
 ---
 
-## 📦 Arquitectura del Software
+## Estructura del Proyecto
 
 ```text
 MVP PIZZERIA/
-├── admin.html               # Panel de Administración comercial y métricas
-├── caja.html                # Terminal de Caja (POS), cobros y boletas
-├── cocina.html              # Pantalla KDS para pizzeros y despacho
-├── index.html               # Landing page y bienvenida
-├── db.js                    # Conexión pool a PostgreSQL Neon en la nube
-├── servidor.js              # Backend Node.js / Express y API REST
-├── package.json             # Dependencias del proyecto (express, pg, cors)
-├── iniciar_servidor.bat     # Lanzador automático para Windows
-│
-├── jev/                     # Motor de Inteligencia Artificial Gastronómica
-│   ├── motorJev.js          # Orquestador del asistente y recomendaciones
-│   ├── marketBasket.js      # Algoritmo de Reglas de Asociación (MBA)
-│   ├── naiveBayes.js        # Clasificador probabilístico Bayesiano
-│   ├── datasetBenchmark.js  # Calibración gastronómica inicial
-│   └── test_jev.js          # Pruebas unitarias de algoritmos
-│
-├── paginas/                 # Vistas del cliente
-│   ├── menu.html            # Carta digital interactiva con asistente JEV
-│   ├── nosotros.html        # Página institucional
-│   └── contacto.html        # Información de contacto y reservas
-│
-├── scripts/                 # Lógica frontend
-│   ├── api.js               # Cliente de comunicación con backend y BroadcastChannel
-│   ├── global.js            # Carrito en tiempo real, selector de mesa y toast
-│   ├── menu.js              # Renderizado de carta, filtros y sugerencias
-│   ├── cocina.js            # Lógica KDS en tiempo real
-│   ├── caja.js              # Flujo de cobros y emisión fiscal
-│   └── admin.js             # Métricas y gestión de catálogo
-│
-└── estilos/                 # Hojas de estilo CSS modularizadas
-    ├── global.css
-    ├── menu.css
-    ├── cocina.css
-    ├── caja.css
-    └── admin.css
+|-- admin.html               # Panel de administracion
+|-- caja.html                # Terminal de cobros y caja POS
+|-- cocina.html              # Pantalla KDS de cocina
+|-- index.html               # Pagina de inicio del cliente
+|-- db.js                    # Conexion a Neon PostgreSQL
+|-- servidor.js              # Servidor API REST en Express
+|-- package.json             # Manifiesto y dependencias npm
+|-- iniciar_servidor.bat     # Lanzador para entorno Windows
+|
+|-- jev/                     # Motor algoritmico de recomendacion
+|   |-- motorJev.js          # Orquestador del motor
+|   |-- marketBasket.js      # Implementacion de reglas de asociacion
+|   |-- naiveBayes.js        # Clasificador Naive Bayes con Laplace
+|   |-- datasetInicial.js    # Dataset de calibracion
+|   `-- test_jev.js          # Pruebas unitarias de algoritmos
+|
+|-- paginas/                 # Vistas del cliente
+|   |-- menu.html            # Carta digital y asistente
+|   |-- nosotros.html        # Pagina nosotros
+|   `-- contacto.html        # Pagina de contacto
+|
+|-- scripts/                 # Logica de cliente (Frontend)
+|   |-- api.js               # Comunicacion con backend y sincronizacion
+|   |-- global.js            # Carrito de compras y simulador QR
+|   |-- menu.js              # Renderizado de carta y sugerencias
+|   |-- cocina.js            # Gestion de tickets KDS
+|   |-- caja.js              # Logica de cobros y boletas
+|   `-- admin.js             # Gestion de metricas y catalogo
+|
+`-- estilos/                 # Hojas de estilo CSS
+    |-- global.css
+    |-- menu.css
+    |-- cocina.css
+    |-- caja.css
+    `-- admin.css
 ```
 
 ---
 
-## 👨‍💻 Autor & Colaborador
-* **Autor / Propietario:** Jhamir Alexander (`jhamir735`)
-* **Correo:** `jhmralexander@gmail.com`
-* **Proyecto:** Pizza al Paso — Innovación y Transformación Digital
+## Autor
+
+* **Desarrollador:** Jhamir Alexander
+* **Correo:** jhmralexander@gmail.com
+* **Proyecto:** Pizza al Paso - Transformacion Digital y Autoservicio QR
