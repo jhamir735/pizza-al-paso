@@ -289,6 +289,8 @@ button {
   font-size: 13px;
   font-weight: 700;
   color: var(--oscuro-suave);
+  text-decoration: none;
+  cursor: pointer;
   transition: var(--transicion);
 }
 
