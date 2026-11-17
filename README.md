@@ -4,63 +4,68 @@ Sistema integral de autoservicio digital para restaurante y pizzeria. Desarrolla
 
 ---
 
-## Modulos del Sistema
+## Acceso Publico en la Nube (Despliegue Online 24/7)
 
-Con el servidor backend en ejecucion, los modulos se encuentran accesibles en las siguientes rutas:
+El sistema se encuentra desplegado y activo en internet. Cualquier integrante del equipo, docente o usuario puede acceder directamente desde su navegador (movil, tablet o computadora) sin necesidad de instalar programas ni encender un servidor local:
 
-| Modulo | Descripcion | Ruta Local |
+| Modulo | Descripcion | Enlace en la Nube |
 | :--- | :--- | :--- |
-| **Inicio** | Portal principal del restaurante | `http://localhost:3000` |
-| **Menu QR (Clientes)** | Carta digital interactiva, seleccion de mesa, carrito y envio de pedidos | `http://localhost:3000/paginas/menu.html` |
-| **Cocina (KDS)** | Pantalla para pizzeros y control de estados (Recibido, Al Horno, En Mesa) | `http://localhost:3000/cocina.html` |
-| **Caja (POS)** | Registro de cobros (Efectivo, Yape/Plin, Tarjetas) y emision de comprobantes | `http://localhost:3000/caja.html` |
-| **Administracion** | Panel de control de ventas, metricas, gestion de pedidos y catalogo | `http://localhost:3000/admin.html` |
-| **Nosotros** | Informacion institucional del restaurante | `http://localhost:3000/paginas/nosotros.html` |
-| **Contacto** | Ubicacion, canales de atencion y reservas | `http://localhost:3000/paginas/contacto.html` |
+| **Inicio** | Portal principal del restaurante | [https://pizza-al-paso.onrender.com](https://pizza-al-paso.onrender.com) |
+| **Menu QR (Clientes)** | Carta digital, seleccion de mesa, carrito y comanda en vivo | [https://pizza-al-paso.onrender.com/paginas/menu.html](https://pizza-al-paso.onrender.com/paginas/menu.html) |
+| **Cocina (KDS)** | Pantalla para pizzeros (Recibido, Al Horno, En Mesa) | [https://pizza-al-paso.onrender.com/cocina.html](https://pizza-al-paso.onrender.com/cocina.html) |
+| **Caja (POS)** | Registro de cobros (Efectivo, Yape/Plin, Tarjetas) y boletas | [https://pizza-al-paso.onrender.com/caja.html](https://pizza-al-paso.onrender.com/caja.html) |
+| **Administracion** | Panel de metricas, ventas y catalogo de productos | [https://pizza-al-paso.onrender.com/admin.html](https://pizza-al-paso.onrender.com/admin.html) |
+| **Nosotros** | Informacion institucional del restaurante | [https://pizza-al-paso.onrender.com/paginas/nosotros.html](https://pizza-al-paso.onrender.com/paginas/nosotros.html) |
+| **Contacto** | Ubicacion, canales de atencion y reservas | [https://pizza-al-paso.onrender.com/paginas/contacto.html](https://pizza-al-paso.onrender.com/paginas/contacto.html) |
+
+*Nota sobre el servidor en la nube:* La instancia gratuita entra en reposo tras periodos de inactividad. Si el sitio no ha recibido visitas recientes, la primera carga puede tomar entre 30 y 45 segundos mientras reactiva el servicio. Luego de esto, la navegacion opera de forma inmediata.
 
 ---
 
-## Guia de Ejecucion
+## Guia de Ejecucion Local (Para Desarrolladores y Colaboradores)
 
-### Opcion 1: Ejecucion directa en Windows
-Ejecutar el archivo por lotes ubicado en la raiz:
+Si un compañero o evaluador desea ejecutar el proyecto de forma local en su propia computadora, el procedimiento es el siguiente:
+
+### Paso 1: Obtener el codigo
+1. En la pagina principal del repositorio, hacer clic en el boton verde **Code**.
+2. Seleccionar **Download ZIP** y descomprimir el archivo en cualquier carpeta del equipo (o clonar mediante `git clone https://github.com/jhamir735/pizza-al-paso.git`).
+
+### Paso 2: Iniciar el servidor
+
+#### Opcion A (Recomendada en Windows - Sin configuracion):
+Hacer doble clic sobre el archivo ejecutable:
 ```bash
 iniciar_servidor.bat
 ```
-El script se posiciona de forma automatica en el directorio del proyecto y levanta el servidor backend en el puerto 3000.
+El archivo se posiciona de manera automatica en el directorio del proyecto, valida la estructura y levanta el servidor backend en el puerto local 3000.
 
----
-
-### Opcion 2: Ejecucion por consola
-
-1. Abrir la terminal y ubicarse en la carpeta del proyecto:
+#### Opcion B (Por consola o terminal):
+1. Abrir la terminal (PowerShell, CMD o Bash) y posicionarse en la carpeta del proyecto:
    ```bash
    cd "MVP PIZZERIA"
    ```
-
-2. Instalar las dependencias de Node.js:
+2. Instalar dependencias de Node.js:
    ```bash
    npm install
    ```
-
-3. Iniciar el servidor:
+3. Iniciar el servicio:
    ```bash
    node servidor.js
    ```
-   o alternativamente:
+   o mediante npm:
    ```bash
    npm start
    ```
 
-4. Salida esperada en consola:
-   ```text
-   Conectado a PostgreSQL Neon...
-   Tabla "productos" lista.
-   Tabla "pedidos" lista.
-   SERVIDOR PIZZERIA AL PASO CONECTADO A NEON BD
-   Web local: http://localhost:3000
-   Servidor activo. Presiona Ctrl+C para detenerlo.
-   ```
+### Paso 3: Acceso a rutas locales
+Una vez levantado el servidor local, ingresar en el navegador:
+* Inicio: `http://localhost:3000`
+* Menu Clientes: `http://localhost:3000/paginas/menu.html`
+* Cocina KDS: `http://localhost:3000/cocina.html`
+* Caja POS: `http://localhost:3000/caja.html`
+* Administracion: `http://localhost:3000/admin.html`
+
+*Nota sobre la base de datos:* La conexion a Neon PostgreSQL se encuentra centralizada y configurada en el proyecto, por lo que tanto el despliegue en la nube como las ejecuciones locales sincronizan sobre la misma base de datos remota sin requerir configuraciones de bases de datos locales.
 
 ---
 
