@@ -1,6 +1,5 @@
 /**
- * CONTACTO.JS — Lógica específica de la página de Contacto
- * Manejo del formulario de contacto y simulación de envío
+ * CONTACTO.JS — Lógica de la página de Ubicación y Reservas
  */
 
 document.addEventListener('DOMContentLoaded', () => {
@@ -19,20 +18,20 @@ document.addEventListener('DOMContentLoaded', () => {
     const mensaje = document.getElementById('contactoMensaje').value.trim();
 
     if (!nombre || !correo || !asunto || !mensaje) {
-      mostrarToast('Por favor completa todos los campos requeridos.', '⚠️');
+      mostrarToast('Por favor completa todos los campos requeridos.');
       return;
     }
 
     if (btnEnviar) {
       btnEnviar.disabled = true;
-      btnEnviar.textContent = 'Enviando mensaje…';
+      btnEnviar.textContent = 'Procesando solicitud...';
     }
 
     setTimeout(() => {
       formContacto.style.display = 'none';
       if (mensajeEnviado) mensajeEnviado.style.display = 'block';
-      mostrarToast('¡Mensaje enviado con éxito! Te contactaremos pronto.', '✉️');
-    }, 1200);
+      mostrarToast('Solicitud registrada correctamente.');
+    }, 900);
   });
 
   const textarea = document.getElementById('contactoMensaje');
@@ -51,7 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
       if (mensajeEnviado) mensajeEnviado.style.display = 'none';
       if (btnEnviar) {
         btnEnviar.disabled = false;
-        btnEnviar.textContent = 'Enviar Mensaje ✉️';
+        btnEnviar.textContent = 'Enviar Solicitud';
       }
     });
   }

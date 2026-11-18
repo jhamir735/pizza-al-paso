@@ -1,16 +1,13 @@
 /**
  * COCINA.JS — Pantalla KDS (Kitchen Display System)
- * Pizza al Paso · Monitoreo y despacho en tiempo real para cocineros y pizzeros
+ * Monitoreo y despacho en tiempo real para pizzeros
  */
 
-let filtroEstadoKds = 'activos'; // 'activos', 'Recibido', 'Al Horno', 'En Mesa', 'todos'
+let filtroEstadoKds = 'activos';
 let audioHabilitado = true;
 let totalPedidosPrevio = 0;
 let ultimoHashTickets = '';
 
-// ═══════════════════════════════════════════════
-// 1. CARGA Y SINCRONIZACIÓN DE PEDIDOS
-// ═══════════════════════════════════════════════
 function obtenerPedidosKds() {
   try {
     return JSON.parse(localStorage.getItem('pizza_pedidos') || '[]');
@@ -36,7 +33,6 @@ function renderizarTicketsKds(forzar = false) {
   }
   ultimoHashTickets = hashActual;
 
-  // Filtrado según selección
   let filtrados = [];
   if (filtroEstadoKds === 'activos') {
     filtrados = todos.filter(p => p.estado !== 'Entregado');
@@ -46,15 +42,16 @@ function renderizarTicketsKds(forzar = false) {
     filtrados = todos.filter(p => p.estado === filtroEstadoKds);
   }
 
-  // Actualizar contadores
   actualizarContadoresKds(todos);
 
   if (filtrados.length === 0) {
     contenedor.innerHTML = `
       <div class="kds-vacio">
-        <div class="icono-vacio">🔥</div>
-        <h2>No hay pedidos en este estado</h2>
-        <p>Cuando un cliente confirme un pedido desde el menú QR, aparecerá en esta pantalla en tiempo real.</p>
+        <div class="icono-vacio" style="opacity:0.4;">
+          <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><rect x="3" y="4" width="18" height="16" rx="2"/><line x1="7" y1="9" x2="17" y2="9"/><line x1="7" y1="13" x2="13" y2="13"/></svg>
+        </div>
+        <h2>Sin comandas en esta bandeja</h2>
+        <p>Cuando un comensal envíe su pedido desde el código QR de su mesa, se mostrará inmediatamente aquí.</p>
       </div>`;
     return;
   }
@@ -63,25 +60,24 @@ function renderizarTicketsKds(forzar = false) {
     const codigoEsc = (p.codigo || '').replace(/'/g, "\\'");
     const estadoClass = p.estado === 'Al Horno' ? 'estado-horno' : (p.estado === 'En Mesa' ? 'estado-mesa' : 'estado-recibido');
 
-    // Botón de acción según el estado — usa codigo, no índice (evita bugs con reordenamiento)
     let botonAccionHtml = '';
     if (p.estado === 'Recibido') {
       botonAccionHtml = `
-        <button class="btn-accion-cocina btn-al-horno" onclick="cambiarEstadoKds('${codigoEsc}', 'Al Horno')">
-          <span>🔥</span> Meter al Horno a Leña
+        <button type="button" class="btn-accion-cocina btn-al-horno" onclick="cambiarEstadoKds('${codigoEsc}', 'Al Horno')">
+          <span>Ingresar al Horno a Leña</span>
         </button>`;
     } else if (p.estado === 'Al Horno') {
       botonAccionHtml = `
-        <button class="btn-accion-cocina btn-listo" onclick="cambiarEstadoKds('${codigoEsc}', 'En Mesa')">
-          <span>🍕</span> ¡Listo! Servir a Mesa
+        <button type="button" class="btn-accion-cocina btn-listo" onclick="cambiarEstadoKds('${codigoEsc}', 'En Mesa')">
+          <span>Listo · Despachar a Mesa</span>
         </button>`;
     } else if (p.estado === 'En Mesa') {
       botonAccionHtml = `
-        <button class="btn-accion-cocina btn-despachar" onclick="cambiarEstadoKds('${codigoEsc}', 'Entregado')">
-          <span>✓</span> Marcar como Entregado
+        <button type="button" class="btn-accion-cocina btn-despachar" onclick="cambiarEstadoKds('${codigoEsc}', 'Entregado')">
+          <span>Confirmar Entrega Final</span>
         </button>`;
     } else {
-      botonAccionHtml = `<div style="text-align:center; font-size:12px; color:#10b981; font-weight:700;">✓ Pedido Despachado</div>`;
+      botonAccionHtml = `<div style="text-align:center; font-size:12px; color:#10b981; font-weight:700;">Orden Entregada en Mesa</div>`;
     }
 
     const itemsHtml = p.items && p.items.length > 0
@@ -93,21 +89,20 @@ function renderizarTicketsKds(forzar = false) {
             </div>
           </div>
         `).join('')
-      : '<div style="color:#aaa;">Pedido general</div>';
+      : '<div style="color:#aaa;">Comanda general</div>';
 
     return `
       <article class="ticket-kds ${estadoClass}">
         <div class="ticket-header">
           <div class="ticket-mesa-box">
-            <span>📍</span>
-            <strong>${p.mesa || 'Salón'}</strong>
+            <strong>${p.mesa || 'Mesa 1'}</strong>
           </div>
-          <span class="ticket-tiempo">🕒 ${p.fecha || 'Reciente'}</span>
+          <span class="ticket-tiempo">${p.fecha || 'Reciente'}</span>
         </div>
 
         <div class="ticket-info-cliente">
-          <span>Cliente: <strong>${p.cliente || 'Comensal'}</strong></span>
-          <span>${p.codigo || ''}</span>
+          <span>Comensal: <strong>${p.cliente || 'En Salón'}</strong></span>
+          <span>${p.codigo || ''} · <strong>${p.estado || 'Recibido'}</strong></span>
         </div>
 
         <div class="ticket-items-lista">
@@ -116,7 +111,7 @@ function renderizarTicketsKds(forzar = false) {
 
         ${p.notas && p.notas !== 'Sin notas especiales' ? `
           <div class="ticket-notas-box">
-            <strong>Nota para el pizzero:</strong><br>
+            <strong>Indicaciones de mesa:</strong><br>
             <em>"${p.notas}"</em>
           </div>
         ` : ''}
@@ -137,7 +132,6 @@ function cambiarEstadoKds(codigo, nuevoEstado) {
     guardarPedidosKds(todos);
     reproducirSonidoAccion();
 
-    // Actualizar en Neon BD y notificar otras pestañas
     if (typeof apiActualizarEstadoPedido === 'function') {
       apiActualizarEstadoPedido(pedido.codigo, nuevoEstado);
     }
@@ -163,16 +157,29 @@ function actualizarContadoresKds(todos) {
   if (elMes) elMes.textContent = countMesa;
   if (elAct) elAct.textContent = countActivos;
 
-  // Si entraron nuevos pedidos, emitir sonido y notificación
   if (todos.length > totalPedidosPrevio && totalPedidosPrevio > 0) {
     sonarAlertaNuevoPedido();
   }
   totalPedidosPrevio = todos.length;
 }
 
-// ═══════════════════════════════════════════════
-// 2. SONIDOS Y ALERTAS DE COCINA (BEEP SINTETIZADO)
-// ═══════════════════════════════════════════════
+function renderizarAvisoAsistencia(aviso) {
+  const barra = document.getElementById('kdsBarraAsistencia');
+  if (!barra || !aviso) return;
+  barra.style.display = 'flex';
+  barra.style.justifyContent = 'space-between';
+  barra.style.alignItems = 'center';
+  barra.innerHTML = `
+    <div>
+      <strong>SOLICITUD EN SALÓN (${aviso.hora}):</strong> ${aviso.mesa} requiere <em>"${aviso.tipo}"</em>
+    </div>
+    <button type="button" onclick="this.parentElement.style.display='none'" style="color:#fcd34d;font-weight:700;font-size:12px;">
+      Marcar Atendido ×
+    </button>
+  `;
+  sonarAlertaNuevoPedido();
+}
+
 function sonarAlertaNuevoPedido() {
   if (!audioHabilitado) return;
   try {
@@ -181,8 +188,8 @@ function sonarAlertaNuevoPedido() {
     const gain = audioCtx.createGain();
 
     osc.type = 'sine';
-    osc.frequency.setValueAtTime(587.33, audioCtx.currentTime); // D5
-    osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.15); // A5
+    osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+    osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.15);
 
     gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
@@ -192,9 +199,7 @@ function sonarAlertaNuevoPedido() {
 
     osc.start();
     osc.stop(audioCtx.currentTime + 0.45);
-  } catch (e) {
-    console.log('AudioContext no disponible o bloqueado por el navegador');
-  }
+  } catch (e) {}
 }
 
 function reproducirSonidoAccion() {
@@ -223,13 +228,10 @@ function alternarSonido() {
   audioHabilitado = !audioHabilitado;
   const btn = document.getElementById('btnToggleSonido');
   if (btn) {
-    btn.textContent = audioHabilitado ? '🔔 Sonido: Activado' : '🔕 Sonido: Silenciado';
+    btn.textContent = audioHabilitado ? 'Alerta Sonora: Activa' : 'Alerta Sonora: Silenciada';
   }
 }
 
-// ═══════════════════════════════════════════════
-// 3. RELOJ DIGITAL DE COCINA
-// ═══════════════════════════════════════════════
 function iniciarRelojCocina() {
   const elReloj = document.getElementById('relojCocina');
   function actualizar() {
@@ -242,23 +244,16 @@ function iniciarRelojCocina() {
   setInterval(actualizar, 1000);
 }
 
-// ═══════════════════════════════════════════════
-// 4. INICIALIZACIÓN Y EVENT LISTENERS
-// ═══════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
   iniciarRelojCocina();
-
-  // 1. Mostrar inmediatamente lo que hay en localStorage (sin esperar red)
   renderizarTicketsKds();
 
-  // 2. Luego sincronizar con Neon y volver a pintar (trae pedidos que llegaron antes de abrir esta pestaña)
   if (typeof apiObtenerPedidos === 'function') {
     apiObtenerPedidos()
       .then(() => renderizarTicketsKds())
       .catch(() => {});
   }
 
-  // Filtros de barra
   const filtrosBar = document.getElementById('kdsFiltrosBar');
   if (filtrosBar) {
     filtrosBar.addEventListener('click', e => {
@@ -272,30 +267,29 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Botón sonido
   const btnSonido = document.getElementById('btnToggleSonido');
   if (btnSonido) btnSonido.addEventListener('click', alternarSonido);
 
-  // Sincronización en tiempo real desde otras pestañas (cliente, caja o admin)
   window.addEventListener('storage', e => {
     if (e.key === 'pizza_pedidos') {
       renderizarTicketsKds();
+    } else if (e.key === 'pizza_asistencia_mesa') {
+      const lista = JSON.parse(localStorage.getItem('pizza_asistencia_mesa') || '[]');
+      if (lista[0]) renderizarAvisoAsistencia(lista[0]);
     }
   });
 
-  // Canal instantáneo entre pestañas
   if (typeof canalPedidos !== 'undefined' && canalPedidos) {
     canalPedidos.addEventListener('message', e => {
       if (!e.data) return;
       if (e.data.tipo === 'NUEVO_PEDIDO' && e.data.pedido) {
-        // Insertar el nuevo pedido en localStorage de esta pestaña antes de pintar
         const lista = JSON.parse(localStorage.getItem('pizza_pedidos') || '[]');
         if (!lista.some(p => p.codigo === e.data.pedido.codigo)) {
           lista.unshift(e.data.pedido);
           localStorage.setItem('pizza_pedidos', JSON.stringify(lista));
         }
         renderizarTicketsKds();
-        if (typeof reproducirAlertaSonido === 'function') reproducirAlertaSonido();
+        sonarAlertaNuevoPedido();
       } else if (e.data.tipo === 'ACTUALIZAR_PEDIDO' && e.data.codigo) {
         const lista = JSON.parse(localStorage.getItem('pizza_pedidos') || '[]');
         const idx = lista.findIndex(p => p.codigo === e.data.codigo);
@@ -304,6 +298,8 @@ document.addEventListener('DOMContentLoaded', () => {
           localStorage.setItem('pizza_pedidos', JSON.stringify(lista));
         }
         renderizarTicketsKds();
+      } else if (e.data.tipo === 'ASISTENCIA_MESA' && e.data.aviso) {
+        renderizarAvisoAsistencia(e.data.aviso);
       } else if (e.data.tipo === 'LIMPIAR_PEDIDOS') {
         localStorage.removeItem('pizza_pedidos');
         renderizarTicketsKds();
@@ -311,12 +307,11 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Polling de seguridad cada 2 segundos (consulta BD Neon para traer pedidos nuevos)
   setInterval(() => {
     if (typeof apiObtenerPedidos === 'function') {
       apiObtenerPedidos().then(() => renderizarTicketsKds()).catch(() => {});
     } else {
       renderizarTicketsKds();
     }
-  }, 2000);
+  }, 2500);
 });

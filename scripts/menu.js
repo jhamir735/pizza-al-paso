@@ -1,13 +1,30 @@
 /**
- * MENU.JS — Lógica específica de la página del Menú
- * Búsqueda en tiempo real, filtrado por categorías y Motor Asistente JEV
+ * MENU.JS — Carta Móvil de Autoservicio en Mesa QR
+ * Incluye tarjetas horizontales táctiles con controles +/- directos y recomendador JEV compacto
  */
 
 let filtroCategoriaActivo = 'todas';
 let terminoBusqueda = '';
 
+function normalizarCategoriaProducto(cat) {
+  const c = String(cat || '').toLowerCase().trim();
+  if (c.startsWith('pizza')) return 'pizza';
+  if (c.startsWith('entrada') || c.startsWith('acompa')) return 'entradas';
+  if (c.startsWith('bebida')) return 'bebidas';
+  if (c.startsWith('postre')) return 'postres';
+  return c || 'pizza';
+}
+
+const titulosCategorias = {
+  todas: 'Carta Completa',
+  pizza: 'Pizzas al Horno a Leña',
+  entradas: 'Entradas para Compartir',
+  bebidas: 'Bebidas y Refrescos',
+  postres: 'Postres Artesanales'
+};
+
 // ═══════════════════════════════════════════════
-// RENDERIZADO DEL CATÁLOGO
+// RENDERIZADO DEL CATÁLOGO MÓVIL
 // ═══════════════════════════════════════════════
 function renderizarProductos() {
   const grilla = el('grillaProductos');
@@ -17,45 +34,79 @@ function renderizarProductos() {
     productos = obtenerProductos();
   }
 
+  const catFiltro = filtroCategoriaActivo === 'todas'
+    ? 'todas'
+    : normalizarCategoriaProducto(filtroCategoriaActivo);
+
   const filtrados = productos.filter(p => {
-    const cumpleCat = filtroCategoriaActivo === 'todas' || p.categoria === filtroCategoriaActivo;
+    const catProd = normalizarCategoriaProducto(p.categoria);
+    const cumpleCat = catFiltro === 'todas' || catProd === catFiltro;
     const q = terminoBusqueda.toLowerCase().trim();
-    const cumpleBusqueda = p.nombre.toLowerCase().includes(q) || p.descripcion.toLowerCase().includes(q);
+    const cumpleBusqueda =
+      (p.nombre || '').toLowerCase().includes(q) ||
+      (p.descripcion || '').toLowerCase().includes(q) ||
+      (p.etiqueta || '').toLowerCase().includes(q);
     return cumpleCat && cumpleBusqueda;
   });
+
+  const lblCatTitulo = el('tituloCategoriaActiva');
+  const lblCatConteo = el('conteoCategoriaActiva');
+  if (lblCatTitulo) lblCatTitulo.textContent = titulosCategorias[catFiltro] || 'Carta';
+  if (lblCatConteo) lblCatConteo.textContent = `${filtrados.length} opciones`;
 
   if (filtrados.length === 0) {
     grilla.innerHTML = `
       <div class="estado-vacio">
-        <div class="emoji-vacio">🔍</div>
-        <strong>No encontramos opciones con ese nombre</strong>
-        <p>Intenta buscar por ingredientes como "pepperoni", "queso" o "champiñones".</p>
-        <button class="btn-primario" onclick="restablecerFiltros()" style="margin-top: 16px;">
-          Ver Toda la Carta
+        <svg class="ico ico-xl" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+        <strong>Sin resultados para tu búsqueda</strong>
+        <p>Prueba con otro ingrediente o toca "Ver toda la carta".</p>
+        <button type="button" class="btn-primario" onclick="restablecerFiltros()" style="margin-top: 12px; padding: 9px 16px; font-size: 13px;">
+          Ver toda la carta
         </button>
       </div>`;
     return;
   }
 
-  grilla.innerHTML = filtrados.map(p => `
-    <article class="tarjeta-producto">
-      <div class="producto-imagen">
-        <img loading="lazy" src="${p.imagen}" alt="${p.nombre}"
-             onerror="this.src='https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=700&q=80'">
-        <span class="etiqueta-producto">${p.etiqueta}</span>
-      </div>
-      <div class="producto-cuerpo">
-        <div class="producto-fila-superior">
-          <h3 class="producto-nombre">${p.nombre}</h3>
-          <span class="producto-precio">${dinero(p.precio)}</span>
+  grilla.innerHTML = filtrados.map(p => {
+    const etiquetaLimpia = typeof limpiarTextoEmojis === 'function'
+      ? limpiarTextoEmojis(p.etiqueta || 'Artesanal')
+      : (p.etiqueta || 'Artesanal');
+    const cantEnCarrito = (typeof carrito !== 'undefined' && carrito[p.id]) ? carrito[p.id] : 0;
+
+    const controlAccionHtml = cantEnCarrito > 0
+      ? `
+        <div class="stepper-tarjeta" aria-label="Cantidad en comanda">
+          <button type="button" data-stepper-id="${p.id}" data-stepper-delta="-1" aria-label="Quitar uno">−</button>
+          <span>${cantEnCarrito}</span>
+          <button type="button" data-stepper-id="${p.id}" data-stepper-delta="1" aria-label="Agregar uno">+</button>
         </div>
-        <p class="producto-descripcion">${p.descripcion}</p>
-        <button class="btn-agregar-producto" data-agregar="${p.id}">
-          <span>＋</span> Agregar a la Comanda
+      `
+      : `
+        <button type="button" class="btn-agregar-producto" data-agregar="${p.id}">
+          <span>+ Agregar</span>
         </button>
-      </div>
-    </article>
-  `).join('');
+      `;
+
+    return `
+      <article class="tarjeta-producto ${cantEnCarrito > 0 ? 'en-comanda' : ''}">
+        <div class="producto-cuerpo">
+          <span class="etiqueta-producto-inline">${escaparHtml(etiquetaLimpia)}</span>
+          <h3 class="producto-nombre">${escaparHtml(p.nombre)}</h3>
+          <p class="producto-descripcion">${escaparHtml(p.descripcion)}</p>
+          <div class="producto-fila-inferior">
+            <span class="producto-precio">${dinero(p.precio)}</span>
+          </div>
+        </div>
+        <div class="producto-columna-foto">
+          <div class="producto-imagen">
+            <img loading="lazy" src="${p.imagen}" alt="${escaparHtml(p.nombre)}"
+                 onerror="this.src='https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=700&q=80'">
+          </div>
+          ${controlAccionHtml}
+        </div>
+      </article>
+    `;
+  }).join('');
 }
 
 function restablecerFiltros() {
@@ -69,62 +120,46 @@ function restablecerFiltros() {
 }
 
 // ═══════════════════════════════════════════════
-// MOTOR ASISTENTE JEV CONECTADO A LA IA Y NEON BD
+// MOTOR DE RECOMENDACIÓN GASTRONÓMICA JEV (COMPACTO MÓVIL)
 // ═══════════════════════════════════════════════
-
-// Mapeo de casos para consultar al motor probabilístico y reglas de asociación
 const configuracionCasosJev = {
   popular: {
     titulo: 'Más Pedida',
     idPrincipal: 'pepperoni',
     itemsSimulados: [],
-    motivoBase: 'Mayor frecuencia de compra en Neon: Pizza artesanal insignia al horno de leña.',
+    motivoBase: 'La más pedida en salón: doble pepperoni artesanal y mozzarella al horno de leña.',
     idMaridaje: 'gaseosa-15'
   },
   individual: {
-    titulo: 'Solo Yo (Individual)',
+    titulo: 'Individual',
     idPrincipal: 'clasica',
     itemsSimulados: [{ id: 'clasica', nombre: 'Pizza Margherita Clásica', categoria: 'pizza', precio: 19.90, cantidad: 1 }],
-    motivoBase: 'Algoritmo Naive Bayes clasificó consumo individual (96.5% certeza): Porción personal con 48h de fermentación.',
+    motivoBase: 'Ideal para 1 persona: masa madre ligera de 48h con albahaca fresca.',
     idMaridaje: 'chicha-jarra'
   },
   pareja: {
-    titulo: 'En Pareja (2 Personas)',
+    titulo: 'En Pareja',
     idPrincipal: 'pepperoni',
     itemsSimulados: [{ id: 'pepperoni', nombre: 'Pizza Pepperoni Supreme', categoria: 'pizza', precio: 25.90, cantidad: 1 }],
-    motivoBase: 'Regla de asociación MBA (Lift: 1.48x): Quienes eligen Pepperoni suelen maridar con Pan al Ajo con queso en mesa.',
+    motivoBase: 'Favorita para compartir en pareja junto a una porción de Pan al Ajo gratinado.',
     idMaridaje: 'pan-ajo'
   },
   familiar: {
-    titulo: 'Familiar (3-4 Personas)',
+    titulo: 'Familiar',
     idPrincipal: 'carnivora',
     itemsSimulados: [
       { id: 'pepperoni', nombre: 'Pizza Pepperoni Supreme', categoria: 'pizza', precio: 25.90, cantidad: 1 },
       { id: 'carnivora', nombre: 'Pizza Carnívora Rústica', categoria: 'pizza', precio: 29.90, cantidad: 1 }
     ],
-    motivoBase: 'Regla de asociación familiar (Lift: 2.17x, Confianza: 67%): La IA detecta comanda familiar y sugiere la bebida de 1.5 L.',
-    idMaridaje: 'gaseosa-15'
-  },
-  carnes: {
-    titulo: 'Amantes de Carnes',
-    idPrincipal: 'carnivora',
-    itemsSimulados: [{ id: 'carnivora', nombre: 'Pizza Carnívora Rústica', categoria: 'pizza', precio: 29.90, cantidad: 1 }],
-    motivoBase: 'Recomendación por contenido: 3 carnes seleccionadas (prosciutto cotto, panceta crocante y carne artesanal).',
+    motivoBase: 'Para 3 a 4 personas en mesa: combinación contundente de carnes al horno.',
     idMaridaje: 'gaseosa-15'
   },
   veggie: {
-    titulo: 'Opción Veggie',
+    titulo: 'Vegetariana',
     idPrincipal: 'vegetariana',
-    itemsSimulados: [{ id: 'vegetariana', nombre: 'Pizza Vegetariana', categoria: 'pizza', precio: 23.90, cantidad: 1 }],
-    motivoBase: 'Recomendación vegetal fresca: Pimientos asados al fuego, champiñones portobello y albahaca fresca.',
+    itemsSimulados: [{ id: 'vegetariana', nombre: 'Pizza Huerta Silvestre', categoria: 'pizza', precio: 23.90, cantidad: 1 }],
+    motivoBase: 'Champiñones portobello frescos, pimientos asados, aceitunas y rúcula.',
     idMaridaje: 'chicha-jarra'
-  },
-  compartir: {
-    titulo: 'Para Picar / Entradas',
-    idPrincipal: 'pan-ajo',
-    itemsSimulados: [{ id: 'pan-ajo', nombre: 'Pan al Ajo Supremo con Queso', categoria: 'entradas', precio: 10.90, cantidad: 1 }],
-    motivoBase: 'Aperitivo de alta afinidad: Baguette crocante con mantequilla de ajo confitado y mozzarella gratinada.',
-    idMaridaje: 'tequenos'
   }
 };
 
@@ -136,8 +171,7 @@ async function actualizarJev(preferencia) {
   if (!tarjeta) return;
 
   const cfg = configuracionCasosJev[preferencia] || configuracionCasosJev.popular;
-  
-  // Si la preferencia es "carrito", utilizar la comanda real actual
+
   let itemsAEnviar = cfg.itemsSimulados;
   let esModoCarritoReal = false;
   if (preferencia === 'carrito') {
@@ -149,99 +183,57 @@ async function actualizarJev(preferencia) {
     });
   }
 
-  // Tarjeta en estado consultando IA
-  tarjeta.style.opacity = '0.6';
-
   let respuestaIa = null;
   if (typeof apiConsultarJev === 'function') {
     try {
       respuestaIa = await apiConsultarJev(itemsAEnviar);
-    } catch (e) {
-      console.warn('Fallback local JEV:', e);
-    }
+    } catch (e) {}
   }
 
-  tarjeta.style.opacity = '1';
-
-  // Obtener producto principal a mostrar
   let prodPrincipal = null;
   let prodMaridaje = null;
-  let perfilNombre = 'Sugerencia';
-  let perfilCerteza = 95;
-  let algoritmoNombre = 'Motor JEV Híbrido';
   let motivoTexto = cfg.motivoBase;
 
   if (esModoCarritoReal && respuestaIa && respuestaIa.recomendacionPrincipal) {
-    // En modo comanda real, destacar el maridaje faltante sugerido por JEV
     const rec = respuestaIa.recomendacionPrincipal;
     prodPrincipal = productos.find(p => p.id === rec.id) || productos[0];
-    perfilNombre = respuestaIa.perfilDetectado?.clase || 'Mesa';
-    perfilCerteza = Math.round((respuestaIa.perfilDetectado?.probabilidad || 0.92) * 100);
-    algoritmoNombre = rec.algoritmo || 'Market Basket Analysis';
-    motivoTexto = `Para tu mesa actual: ${rec.motivo}`;
+    motivoTexto = rec.motivo;
   } else {
-    // Modo selección por ocasión
     prodPrincipal = productos.find(p => p.id === cfg.idPrincipal) || productos[0];
     if (cfg.idMaridaje) {
       prodMaridaje = productos.find(p => p.id === cfg.idMaridaje);
     }
-
-    if (respuestaIa) {
-      if (respuestaIa.perfilDetectado) {
-        perfilNombre = respuestaIa.perfilDetectado.clase;
-        perfilCerteza = Math.round((respuestaIa.perfilDetectado.probabilidad || 0.94) * 100);
-      }
-      if (respuestaIa.recomendacionPrincipal) {
-        algoritmoNombre = respuestaIa.recomendacionPrincipal.algoritmo || 'Naive Bayes + MBA';
-        if (preferencia === 'individual' || preferencia === 'pareja' || preferencia === 'familiar') {
-          motivoTexto = respuestaIa.recomendacionPrincipal.motivo || cfg.motivoBase;
-        }
-      }
+    if (respuestaIa && respuestaIa.recomendacionPrincipal && (preferencia === 'individual' || preferencia === 'pareja' || preferencia === 'familiar')) {
+      motivoTexto = respuestaIa.recomendacionPrincipal.motivo || cfg.motivoBase;
     }
   }
 
   if (!prodPrincipal) prodPrincipal = productos[0];
 
-  const htmlMaridaje = prodMaridaje ? `
-    <div class="jev-maridaje-caja">
-      <span>✦ Maridaje complementario recomendado:</span>
-      <strong>${prodMaridaje.nombre} (${dinero(prodMaridaje.precio)})</strong>
-    </div>
-  ` : '';
-
   const htmlBotonCombo = prodMaridaje ? `
-    <button class="btn-jev-combo" id="btnJevCombo" title="Agregar pizza + maridaje sugerido">
-      ⚡ Agregar Combo Completo (${dinero(prodPrincipal.precio + prodMaridaje.precio)})
+    <button type="button" class="btn-jev-combo" id="btnJevCombo">
+      + Agregar Dúo: ${escaparHtml(prodPrincipal.nombre)} + ${escaparHtml(prodMaridaje.nombre)} (${dinero(prodPrincipal.precio + prodMaridaje.precio)})
     </button>
   ` : '';
 
   tarjeta.innerHTML = `
-    <div class="jev-miniatura">
-      <img src="${prodPrincipal.imagen}" alt="${prodPrincipal.nombre}"
-           onerror="this.src='https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=700&q=80'">
-    </div>
-    <div class="jev-datos">
-      <div class="jev-insignias">
-        <span class="badge-ia-perfil">🧠 IA JEV · Perfil ${perfilNombre} (${perfilCerteza}% certeza)</span>
-        <span class="badge-ia-algoritmo">⚡ ${algoritmoNombre}</span>
+    <div class="jev-fila-principal">
+      <div class="jev-miniatura">
+        <img src="${prodPrincipal.imagen}" alt="${escaparHtml(prodPrincipal.nombre)}"
+             onerror="this.src='https://images.unsplash.com/photo-1513104890138-7c749659a591?auto=format&fit=crop&w=700&q=80'">
       </div>
-      <h3 style="margin: 4px 0;">${prodPrincipal.nombre}</h3>
-      <div class="jev-precio">${dinero(prodPrincipal.precio)}</div>
-      ${htmlMaridaje}
-      <p class="jev-por-que" style="margin-top: 4px;">
-        <strong>¿Por qué te lo recomienda JEV?</strong> ${motivoTexto}
-      </p>
-    </div>
-    <div class="jev-acciones-grupo">
-      <button class="btn-jev-agregar" id="btnJevAgregarPrincipal" data-agregar="${prodPrincipal.id}">
-        <span style="font-size: 18px;">＋</span>
-        Agregar a mi Pedido
+      <div class="jev-datos">
+        <h3>${escaparHtml(prodPrincipal.nombre)}</h3>
+        <div class="jev-precio">${dinero(prodPrincipal.precio)}</div>
+        <p class="jev-por-que">${escaparHtml(motivoTexto)}</p>
+      </div>
+      <button type="button" class="btn-jev-agregar" id="btnJevAgregarPrincipal">
+        + Pedir
       </button>
-      ${htmlBotonCombo}
     </div>
+    ${htmlBotonCombo}
   `;
 
-  // Asignar listeners específicos
   const btnPrincipal = el('btnJevAgregarPrincipal');
   if (btnPrincipal) {
     btnPrincipal.onclick = () => {
@@ -259,7 +251,7 @@ async function actualizarJev(preferencia) {
         agregarProducto(prodPrincipal.id);
         agregarProducto(prodMaridaje.id);
         if (typeof mostrarToast === 'function') {
-          mostrarToast(`Agregaste combo de ${prodPrincipal.nombre} + ${prodMaridaje.nombre}`, '✦');
+          mostrarToast(`Dúo agregado a tu comanda`);
         }
         verificarChipCarritoJev();
       }
@@ -272,8 +264,8 @@ function verificarChipCarritoJev() {
   if (!chipCarrito) return;
   const cant = Object.values(carrito).reduce((a, b) => a + b, 0);
   if (cant > 0) {
-    chipCarrito.style.display = 'inline-block';
-    chipCarrito.textContent = `🛒 Para mi Comanda (${cant} item${cant > 1 ? 's' : ''})`;
+    chipCarrito.style.display = 'inline-flex';
+    chipCarrito.textContent = `Para mi Pedido (${cant})`;
   } else {
     chipCarrito.style.display = 'none';
     if (preferenciaActualJev === 'carrito') {
@@ -283,14 +275,24 @@ function verificarChipCarritoJev() {
 }
 
 // ═══════════════════════════════════════════════
-// INICIALIZACIÓN DE LA PÁGINA MENÚ
+// INICIALIZACIÓN DE LA CARTA MÓVIL
 // ═══════════════════════════════════════════════
 document.addEventListener('DOMContentLoaded', () => {
   renderizarProductos();
   actualizarJev('popular');
   verificarChipCarritoJev();
 
-  // Chips del Asistente JEV
+  // Delegación para botones +/- dentro de cada tarjeta de producto
+  const grilla = el('grillaProductos');
+  if (grilla) {
+    grilla.addEventListener('click', e => {
+      const btnStep = e.target.closest('[data-stepper-id]');
+      if (btnStep && typeof cambiarCantidad === 'function') {
+        cambiarCantidad(btnStep.dataset.stepperId, Number(btnStep.dataset.stepperDelta));
+      }
+    });
+  }
+
   const chipsJev = el('chipsJev');
   if (chipsJev) {
     chipsJev.addEventListener('click', e => {
@@ -302,7 +304,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Barra de Categorías
   const barraCategorias = el('barraCategorias');
   if (barraCategorias) {
     barraCategorias.addEventListener('click', e => {
@@ -315,7 +316,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Buscador
   const inputBusqueda = el('inputBusqueda');
   if (inputBusqueda) {
     inputBusqueda.addEventListener('input', e => {

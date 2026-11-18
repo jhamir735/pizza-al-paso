@@ -1,9 +1,7 @@
 /**
- * CAJA (POS) - SISTEMA DE COBROS, EMISIÓN DE BOLETAS Y CONTROL DE CAJA
- * Sincronizado en tiempo real con Menú del Cliente, Cocina (KDS) y Administración.
+ * CAJA (POS) — Sistema de Liquidación de Cuentas, Emisión de Comprobantes y Control de Caja
  */
 
-// Estado global de la vista de caja
 let filtroEstadoActual = 'pendientes';
 let filtroMesaActual = 'todas';
 let busquedaTextoActual = '';
@@ -11,14 +9,10 @@ let comandaSeleccionadaParaCobro = null;
 let sonidoCajaHabilitado = true;
 let ultimoHashCaja = '';
 
-// ═══════════════════════════════════════════════
-// 1. CARGA DE DATOS Y STORAGE
-// ═══════════════════════════════════════════════
 function obtenerPedidosCaja() {
   try {
     return JSON.parse(localStorage.getItem('pizza_pedidos') || '[]');
   } catch (e) {
-    console.error('Error al leer pizza_pedidos:', e);
     return [];
   }
 }
@@ -29,9 +23,6 @@ function guardarPedidosCaja(pedidos) {
   renderizarComandasCaja(true);
 }
 
-// ═══════════════════════════════════════════════
-// 2. RELOJ Y MÉTRICAS EN VIVO
-// ═══════════════════════════════════════════════
 function iniciarRelojCaja() {
   const elReloj = document.getElementById('relojCaja');
   if (!elReloj) return;
@@ -52,7 +43,6 @@ function actualizarMetricasCaja() {
   const montoPendiente = pendientes.reduce((acc, p) => acc + (Number(p.total) || 0), 0);
   const montoCobrado = pagados.reduce((acc, p) => acc + (Number(p.total) || 0), 0);
 
-  // Desglose por método de pago
   let totalEfectivo = 0;
   let totalDigital = 0;
 
@@ -66,7 +56,6 @@ function actualizarMetricasCaja() {
     }
   });
 
-  // Elementos UI
   const elCantPend = document.getElementById('metricaCantPendiente');
   const elMontoPend = document.getElementById('metricaMontoPendiente');
   const elCantCobrado = document.getElementById('metricaCantCobrado');
@@ -74,14 +63,13 @@ function actualizarMetricasCaja() {
   const elEfectivo = document.getElementById('metricaEfectivoTotal');
   const elDigital = document.getElementById('metricaDigitalTotal');
 
-  // Badges en chips de filtro
   const badgePend = document.getElementById('badgeFiltroPendientes');
   const badgePag = document.getElementById('badgeFiltroPagados');
   const badgeTodos = document.getElementById('badgeFiltroTodos');
 
-  if (elCantPend) elCantPend.textContent = `${pendientes.length} pedidos`;
+  if (elCantPend) elCantPend.textContent = `${pendientes.length} cuentas`;
   if (elMontoPend) elMontoPend.textContent = 'S/ ' + montoPendiente.toFixed(2);
-  if (elCantCobrado) elCantCobrado.textContent = `${pagados.length} pagados`;
+  if (elCantCobrado) elCantCobrado.textContent = `${pagados.length} cobradas`;
   if (elMontoCobrado) elMontoCobrado.textContent = 'S/ ' + montoCobrado.toFixed(2);
   if (elEfectivo) elEfectivo.textContent = 'S/ ' + totalEfectivo.toFixed(2);
   if (elDigital) elDigital.textContent = 'S/ ' + totalDigital.toFixed(2);
@@ -91,9 +79,6 @@ function actualizarMetricasCaja() {
   if (badgeTodos) badgeTodos.textContent = pedidos.length;
 }
 
-// ═══════════════════════════════════════════════
-// 3. RENDERIZADO DE PEDIDOS / CUENTAS
-// ═══════════════════════════════════════════════
 function renderizarComandasCaja(forzar = false) {
   const pedidos = obtenerPedidosCaja();
   const contenedor = document.getElementById('grillaComandasCaja');
@@ -111,22 +96,18 @@ function renderizarComandasCaja(forzar = false) {
   }
   ultimoHashCaja = hashActual;
 
-  // Filtrado
   let resultado = [...pedidos];
 
-  // 1. Filtro por estado de pago
   if (filtroEstadoActual === 'pendientes') {
     resultado = resultado.filter(p => (p.estadoPago || 'Pendiente') === 'Pendiente');
   } else if (filtroEstadoActual === 'pagados') {
     resultado = resultado.filter(p => (p.estadoPago || 'Pendiente') === 'Pagado');
   }
 
-  // 2. Filtro por mesa
   if (filtroMesaActual !== 'todas') {
     resultado = resultado.filter(p => (p.mesa || '').toLowerCase().includes(filtroMesaActual.toLowerCase()));
   }
 
-  // 3. Filtro por texto (código, mesa o cliente)
   if (busquedaTextoActual.trim() !== '') {
     const q = busquedaTextoActual.toLowerCase();
     resultado = resultado.filter(p =>
@@ -136,42 +117,37 @@ function renderizarComandasCaja(forzar = false) {
     );
   }
 
-  // Estado vacío
   if (resultado.length === 0) {
-    let mensaje = 'No hay pedidos registrados.';
+    let mensaje = 'No hay operaciones registradas.';
     if (filtroEstadoActual === 'pendientes') {
-      mensaje = '¡Excelente! No hay pedidos pendientes de cobro en este momento.';
+      mensaje = 'No hay cuentas pendientes de cobro en este momento.';
     } else if (filtroEstadoActual === 'pagados') {
-      mensaje = 'No hay comprobantes pagados aún para los filtros seleccionados.';
+      mensaje = 'No hay comprobantes emitidos para los filtros seleccionados.';
     }
 
     contenedor.innerHTML = `
       <div class="caja-vacio">
-        <div class="caja-vacio-icono">💵</div>
         <h3>${mensaje}</h3>
-        <p style="font-size:13px; color:var(--gris);">Los pedidos emitidos desde las mesas o mostrador se actualizarán automáticamente aquí.</p>
+        <p style="font-size:13px; color:var(--gris); margin-top:6px;">Las comandas enviadas desde los códigos QR de las mesas aparecerán aquí en tiempo real.</p>
       </div>`;
     return;
   }
 
-  // Generar tarjetas
   contenedor.innerHTML = resultado.map(p => {
     const esPagado = (p.estadoPago || 'Pendiente') === 'Pagado';
     const subtotal = ((Number(p.total) || 0) / 1.18);
     const igv = (Number(p.total) || 0) - subtotal;
-    const indiceOriginal = pedidos.findIndex(item => item.codigo === p.codigo);
 
     return `
       <div class="tarjeta-cuenta ${esPagado ? 'pagado' : 'pendiente'}">
-        <!-- Cabecera de Comanda -->
         <div class="cuenta-cabecera">
           <div class="cuenta-mesa-codigo">
             <span class="cuenta-badge-mesa">${p.mesa || 'Mesa 1'}</span>
-            <span class="cuenta-codigo">${p.codigo || '#PZ-000'} · ${p.fecha || ''}</span>
+            <span class="cuenta-codigo">${p.codigo || '#ORD-000'} · ${p.fecha || ''}</span>
           </div>
           <div class="cuenta-badges-estado">
             <span class="badge-pago ${esPagado ? 'pagado' : 'pendiente'}">
-              ${esPagado ? '✓ PAGADO' : '⏳ POR COBRAR'}
+              ${esPagado ? 'PAGADO' : 'POR COBRAR'}
             </span>
             <span class="badge-cocina-ref">
               Cocina: ${p.estado || 'Recibido'}
@@ -179,27 +155,24 @@ function renderizarComandasCaja(forzar = false) {
           </div>
         </div>
 
-        <!-- Info Cliente -->
         <div class="cuenta-info-cliente">
           <span>Comensal: <strong>${p.cliente || 'Cliente en Salón'}</strong></span>
-          <span>Pago inicial: <em>${p.pago || 'Presencial'}</em></span>
+          <span>Preferencia: <em>${p.pago || 'Presencial'}</em></span>
         </div>
 
-        <!-- Lista de Productos -->
         <div class="cuenta-items-lista">
           ${(p.items || []).map(it => `
             <div class="cuenta-item-fila">
               <div class="cuenta-item-cant-nombre">
-                <span class="cuenta-item-cant">${it.cantidad}x</span>
+                <span class="cuenta-item-cant">${it.cantidad}×</span>
                 <span class="cuenta-item-nombre">${it.nombre}</span>
               </div>
               <span class="cuenta-item-precio">S/ ${((Number(it.precio) || 0) * (Number(it.cantidad) || 1)).toFixed(2)}</span>
             </div>
           `).join('')}
-          ${p.notas ? `<div style="font-size:11px; color:#d97706; background:#fffbeb; padding:4px 8px; border-radius:4px; margin-top:4px;"><strong>Nota:</strong> ${p.notas}</div>` : ''}
+          ${p.notas && p.notas !== 'Sin notas especiales' ? `<div style="font-size:11px; color:#92400e; background:#fffbeb; padding:4px 8px; border-radius:4px; margin-top:4px;"><strong>Nota:</strong> ${p.notas}</div>` : ''}
         </div>
 
-        <!-- Desglose de Cuenta -->
         <div class="cuenta-desglose">
           <div class="cuenta-fila-desglose">
             <span>Op. Gravada (Subtotal)</span>
@@ -215,18 +188,17 @@ function renderizarComandasCaja(forzar = false) {
           </div>
         </div>
 
-        <!-- Acciones POS -->
         <div class="cuenta-acciones">
           ${!esPagado ? `
-            <button class="btn-cobrar-pos" onclick="abrirModalCobro('${(p.codigo || '').replace(/'/g, "\\'")}')">
-              <span>💳</span> Cobrar Pedido (POS)
+            <button type="button" class="btn-cobrar-pos" onclick="abrirModalCobro('${(p.codigo || '').replace(/'/g, "\\'")}')">
+              <span>Liquidar Cuenta (POS)</span>
             </button>
           ` : `
             <div class="cuenta-info-pagada">
-              <span>✓ Pagado con ${p.metodoCobroFinal || p.pago || 'Caja'} (${p.nroComprobante || 'B001-001'})</span>
+              <span>Liquidado con ${p.metodoCobroFinal || p.pago || 'Caja'} · ${p.nroComprobante || 'B001-001'}</span>
             </div>
-            <button class="btn-ver-boleta" onclick="abrirModalBoleta('${(p.codigo || '').replace(/'/g, "\\'")}')">
-              <span>🧾</span> Ver Boleta Fiscal / Imprimir
+            <button type="button" class="btn-ver-boleta" onclick="abrirModalBoleta('${(p.codigo || '').replace(/'/g, "\\'")}')">
+              <span>Ver Comprobante Fiscal</span>
             </button>
           `}
         </div>
@@ -235,9 +207,6 @@ function renderizarComandasCaja(forzar = false) {
   }).join('');
 }
 
-// ═══════════════════════════════════════════════
-// 4. MODAL DE COBRO (PROCESAR PAGO)
-// ═══════════════════════════════════════════════
 let metodoPagoSeleccionado = 'Efectivo';
 
 function abrirModalCobro(identificador) {
@@ -253,13 +222,11 @@ function abrirModalCobro(identificador) {
   const txtTitulo = document.getElementById('cobroMesaCodigo');
   const txtTotal = document.getElementById('cobroMontoTotal');
   const inputRecibido = document.getElementById('inputMontoRecibido');
-  const txtVuelto = document.getElementById('txtVueltoCalculado');
 
   if (txtTitulo) txtTitulo.textContent = `${pedido.mesa || 'Mesa 1'} · ${pedido.codigo || ''}`;
   const total = Number(pedido.total) || 0;
   if (txtTotal) txtTotal.textContent = 'S/ ' + total.toFixed(2);
 
-  // Reset inputs
   metodoPagoSeleccionado = 'Efectivo';
   seleccionarMetodoCobro('Efectivo');
   if (inputRecibido) {
@@ -294,7 +261,7 @@ function seleccionarMetodoCobro(metodo) {
 function agregarBillete(monto) {
   const input = document.getElementById('inputMontoRecibido');
   if (!input) return;
-  let actual = Number(input.value) || 0;
+  const actual = Number(input.value) || 0;
   input.value = (actual + monto).toFixed(2);
   calcularVuelto();
 }
@@ -336,16 +303,14 @@ function reproducirSonidoCobro() {
     osc.connect(gain);
     gain.connect(audioCtx.destination);
     osc.type = 'triangle';
-    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime); // C5
-    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1); // E5
-    osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2); // G5
+    osc.frequency.setValueAtTime(523.25, audioCtx.currentTime);
+    osc.frequency.setValueAtTime(659.25, audioCtx.currentTime + 0.1);
+    osc.frequency.setValueAtTime(783.99, audioCtx.currentTime + 0.2);
     gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
     gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.45);
     osc.start();
     osc.stop(audioCtx.currentTime + 0.5);
-  } catch (e) {
-    // Silently continue
-  }
+  } catch (e) {}
 }
 
 function confirmarCobroComanda() {
@@ -356,16 +321,14 @@ function confirmarCobroComanda() {
   const recibido = Number(inputRecibido ? inputRecibido.value : total) || total;
 
   if (metodoPagoSeleccionado === 'Efectivo' && recibido < total) {
-    alert(`El monto recibido (S/ ${recibido.toFixed(2)}) es menor que el total de la comanda (S/ ${total.toFixed(2)}).`);
+    alert(`El monto recibido (S/ ${recibido.toFixed(2)}) es menor que el total de la cuenta (S/ ${total.toFixed(2)}).`);
     return;
   }
 
-  // Generar serie y número de comprobante
   const tipoDoc = document.querySelector('input[name="tipoComprobante"]:checked')?.value || 'Boleta';
   const numeroCorrelativo = Math.floor(1000 + Math.random() * 9000);
   const nroComprobante = `${tipoDoc === 'Factura' ? 'F001' : 'B001'}-${numeroCorrelativo}`;
 
-  // Actualizar pedido buscando por código único
   const pedidos = obtenerPedidosCaja();
   const pedido = pedidos.find(p => p.codigo === comandaSeleccionadaParaCobro.codigo);
 
@@ -382,7 +345,6 @@ function confirmarCobroComanda() {
     reproducirSonidoCobro();
     cerrarModalCobro();
 
-    // Actualizar en Neon BD
     if (typeof apiActualizarPagoPedido === 'function') {
       apiActualizarPagoPedido(pedido.codigo, {
         estadoPago: pedido.estadoPago,
@@ -395,16 +357,12 @@ function confirmarCobroComanda() {
       });
     }
 
-    // Ofrecer visualizar la boleta
     setTimeout(() => {
       abrirModalBoleta(pedido.codigo);
     }, 200);
   }
 }
 
-// ═══════════════════════════════════════════════
-// 5. MODAL DE COMPROBANTE FISCAL / BOLETA
-// ═══════════════════════════════════════════════
 function abrirModalBoleta(identificador) {
   const pedidos = obtenerPedidosCaja();
   const p = typeof identificador === 'string'
@@ -438,7 +396,7 @@ function abrirModalBoleta(identificador) {
       <p><strong>Fecha:</strong> ${fecha}</p>
       <p><strong>Comensal:</strong> ${p.cliente || 'CLIENTE SALÓN'}</p>
       <p><strong>Ubicación:</strong> ${p.mesa || 'Mesa 1'}</p>
-      <p><strong>Cajero:</strong> Caja Principal 01</p>
+      <p><strong>Terminal:</strong> Caja Principal 01</p>
     </div>
 
     <div class="ticket-separador"></div>
@@ -478,7 +436,7 @@ function abrirModalBoleta(identificador) {
         <span>S/ ${total.toFixed(2)}</span>
       </div>
       <div class="fila" style="margin-top:4px;">
-        <span>Forma de Pago:</span>
+        <span>Medio de Pago:</span>
         <span>${p.metodoCobroFinal || p.pago || 'Efectivo'}</span>
       </div>
       ${p.montoEntregado ? `
@@ -496,9 +454,9 @@ function abrirModalBoleta(identificador) {
     <div class="ticket-separador"></div>
 
     <div class="ticket-footer">
-      <p>Representación impresa de la ${tipoDoc}</p>
-      <p>Autorizado por SUNAT · Consulta web: pizzaalpaso.pe</p>
-      <p style="margin-top:8px; font-weight:700;">¡Gracias por su visita y buen provecho! 🍕</p>
+      <p>Representación impresa de Comprobante Electrónico</p>
+      <p>Autorizado mediante Resolución SUNAT</p>
+      <p style="margin-top:8px; font-weight:700;">Gracias por su preferencia</p>
     </div>
   `;
 
@@ -514,9 +472,6 @@ function imprimirComprobante() {
   window.print();
 }
 
-// ═══════════════════════════════════════════════
-// 6. ARQUEO Y CIERRE DE CAJA (MODAL)
-// ═══════════════════════════════════════════════
 function abrirModalArqueoCaja() {
   const pedidos = obtenerPedidosCaja();
   const pagados = pedidos.filter(p => (p.estadoPago || 'Pendiente') === 'Pagado');
@@ -542,32 +497,32 @@ function abrirModalArqueoCaja() {
   if (cuerpo) {
     cuerpo.innerHTML = `
       <div style="background:var(--crema-suave); border:1px solid var(--borde); border-radius:12px; padding:18px; margin-bottom:16px;">
-        <h4 style="font-size:16px; margin-bottom:12px; color:var(--oscuro);">Resumen de Operaciones del Turno</h4>
+        <h4 style="font-size:16px; margin-bottom:12px; color:var(--oscuro);">Resumen Operativo del Turno</h4>
         <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:13px;">
-          <span>Comandas Cobradas:</span>
-          <strong>${pagados.length} tickets</strong>
+          <span>Cuentas Liquidadas:</span>
+          <strong>${pagados.length} comprobantes</strong>
         </div>
         <div style="display:flex; justify-content:space-between; margin-bottom:6px; font-size:13px;">
-          <span>Comandas Pendientes:</span>
-          <strong style="color:var(--dorado-oscuro);">${pendientes.length} cuentas por cobrar</strong>
+          <span>Cuentas por Cobrar:</span>
+          <strong style="color:var(--dorado-oscuro);">${pendientes.length} activas</strong>
         </div>
         <div style="display:flex; justify-content:space-between; font-size:13px;">
-          <span>Hora de Apertura:</span>
-          <span>Hoy · 12:00:00</span>
+          <span>Inicio de Turno:</span>
+          <span>12:00:00</span>
         </div>
       </div>
 
       <div style="display:flex; flex-direction:column; gap:10px; margin-bottom:18px;">
         <div style="display:flex; justify-content:space-between; padding:10px 14px; background:#fff; border:1px solid var(--borde); border-radius:8px;">
-          <span>💵 Efectivo en Gaveta:</span>
+          <span>Efectivo en Gaveta:</span>
           <strong style="font-size:16px;">S/ ${efectivo.toFixed(2)}</strong>
         </div>
         <div style="display:flex; justify-content:space-between; padding:10px 14px; background:#fff; border:1px solid var(--borde); border-radius:8px;">
-          <span>💳 Tarjetas / Terminal POS:</span>
+          <span>Tarjetas / Terminal POS:</span>
           <strong style="font-size:16px;">S/ ${tarjeta.toFixed(2)}</strong>
         </div>
         <div style="display:flex; justify-content:space-between; padding:10px 14px; background:#fff; border:1px solid var(--borde); border-radius:8px;">
-          <span>📱 Billeteras Digitales (Yape/Plin):</span>
+          <span>Billeteras Digitales (Yape / Plin):</span>
           <strong style="font-size:16px; color:#7c3aed;">S/ ${yapePlin.toFixed(2)}</strong>
         </div>
         <div style="display:flex; justify-content:space-between; padding:14px; background:var(--oscuro); color:#fff; border-radius:8px; align-items:center;">
@@ -586,15 +541,28 @@ function cerrarModalArqueoCaja() {
   if (elModal) elModal.style.display = 'none';
 }
 
-// ═══════════════════════════════════════════════
-// 7. INICIALIZACIÓN Y EVENT LISTENERS
-// ═══════════════════════════════════════════════
+function mostrarAvisoCajaAsistencia(aviso) {
+  const barra = document.getElementById('cajaBarraAsistencia');
+  if (!barra || !aviso) return;
+  barra.style.display = 'flex';
+  barra.style.justifyContent = 'space-between';
+  barra.style.alignItems = 'center';
+  barra.innerHTML = `
+    <div>
+      <strong>SOLICITUD DESDE MESA QR (${aviso.hora}):</strong> ${aviso.mesa} solicita <strong>"${aviso.tipo}"</strong>
+    </div>
+    <button type="button" onclick="this.parentElement.style.display='none'" style="background:none;border:none;color:#92400e;font-weight:700;cursor:pointer;">
+      Atendido ×
+    </button>
+  `;
+  reproducirSonidoCobro();
+}
+
 document.addEventListener('DOMContentLoaded', () => {
   iniciarRelojCaja();
   actualizarMetricasCaja();
   renderizarComandasCaja();
 
-  // Sincronizar con Neon BD al cargar
   if (typeof apiObtenerPedidos === 'function') {
     apiObtenerPedidos().then(() => {
       actualizarMetricasCaja();
@@ -602,7 +570,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }).catch(() => {});
   }
 
-  // Filtros de estado (Chips)
   document.querySelectorAll('.chip-filtro-caja').forEach(chip => {
     chip.addEventListener('click', () => {
       document.querySelectorAll('.chip-filtro-caja').forEach(c => c.classList.remove('activo'));
@@ -612,7 +579,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  // Selector de mesa
   const selMesa = document.getElementById('cajaSelectorMesa');
   if (selMesa) {
     selMesa.addEventListener('change', e => {
@@ -621,7 +587,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Buscador de texto
   const inpBuscador = document.getElementById('cajaBuscador');
   if (inpBuscador) {
     inpBuscador.addEventListener('input', e => {
@@ -630,33 +595,31 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Métodos de pago en modal de cobro
   document.querySelectorAll('.metodo-pago-btn').forEach(btn => {
     btn.addEventListener('click', () => {
       seleccionarMetodoCobro(btn.dataset.metodo);
     });
   });
 
-  // Input recibido en modal
   const inpRecibido = document.getElementById('inputMontoRecibido');
   if (inpRecibido) {
     inpRecibido.addEventListener('input', calcularVuelto);
   }
 
-  // Sincronización en tiempo real desde otras pestañas (cliente confirma pedido o cocina cambia estado)
   window.addEventListener('storage', e => {
     if (e.key === 'pizza_pedidos') {
       actualizarMetricasCaja();
       renderizarComandasCaja();
+    } else if (e.key === 'pizza_asistencia_mesa') {
+      const lista = JSON.parse(localStorage.getItem('pizza_asistencia_mesa') || '[]');
+      if (lista[0]) mostrarAvisoCajaAsistencia(lista[0]);
     }
   });
 
-  // Canal instantáneo entre pestañas
   if (typeof canalPedidos !== 'undefined' && canalPedidos) {
     canalPedidos.addEventListener('message', e => {
       if (!e.data) return;
       if (e.data.tipo === 'NUEVO_PEDIDO' && e.data.pedido) {
-        // Insertar pedido en localStorage de esta pestaña
         const lista = JSON.parse(localStorage.getItem('pizza_pedidos') || '[]');
         if (!lista.some(p => p.codigo === e.data.pedido.codigo)) {
           lista.unshift(e.data.pedido);
@@ -673,6 +636,8 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         actualizarMetricasCaja();
         renderizarComandasCaja();
+      } else if (e.data.tipo === 'ASISTENCIA_MESA' && e.data.aviso) {
+        mostrarAvisoCajaAsistencia(e.data.aviso);
       } else if (e.data.tipo === 'LIMPIAR_PEDIDOS') {
         localStorage.removeItem('pizza_pedidos');
         actualizarMetricasCaja();
@@ -681,7 +646,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
   }
 
-  // Intervalo de seguridad para refrescar cada 3 segundos y sincronizar con Neon
   setInterval(() => {
     if (typeof apiObtenerPedidos === 'function') {
       apiObtenerPedidos().then(() => {

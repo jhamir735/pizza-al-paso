@@ -1,57 +1,54 @@
 /* ============================================================
-   INICIO.CSS — Estilos Específicos de la Portada / Inicio
-   Hero split-screen, grid de beneficios, llamada a la acción
+   INICIO.CSS — Portal Principal & Autoservicio en Mesa QR
    ============================================================ */
 
 .seccion-hero {
-  min-height: calc(100vh - var(--alto-nav));
+  min-height: calc(100vh - var(--alto-nav) - 42px);
   display: grid;
-  grid-template-columns: 1.1fr 0.9fr;
+  grid-template-columns: 1.15fr 0.85fr;
   align-items: center;
   overflow: hidden;
   position: relative;
-  background: linear-gradient(135deg, #1f1917 0%, #3a2720 50%, #2a1f1b 100%);
+  background: linear-gradient(135deg, #161210 0%, #2b1d18 55%, #1d1512 100%);
 }
 
 .hero-fondo-overlay {
   position: absolute;
   inset: 0;
   background:
-    radial-gradient(ellipse at 15% 40%, rgba(179,27,38,0.25) 0%, transparent 60%),
-    radial-gradient(ellipse at 85% 85%, rgba(245,158,11,0.18) 0%, transparent 50%);
+    radial-gradient(ellipse at 18% 35%, rgba(168, 25, 35, 0.22) 0%, transparent 58%),
+    radial-gradient(ellipse at 85% 80%, rgba(217, 119, 6, 0.14) 0%, transparent 50%);
   pointer-events: none;
 }
 
 .hero-contenido {
   position: relative;
   z-index: 2;
-  padding: 80px 40px 80px 80px;
-  max-width: 680px;
+  padding: 64px 44px 64px 72px;
+  max-width: 700px;
 }
 
 .hero-etiqueta {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255,255,255,0.12);
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  border: 1px solid rgba(255,255,255,0.18);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
   color: #fcd34d;
-  font-size: 12px;
-  font-weight: 800;
-  letter-spacing: 1px;
+  font-size: 11.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
-  padding: 6px 16px;
+  padding: 6px 14px;
   border-radius: var(--radio-pill);
-  margin-bottom: 22px;
+  margin-bottom: 20px;
 }
 
 .hero-contenido h1 {
   color: #ffffff;
-  font-size: clamp(38px, 4.8vw, 64px);
-  line-height: 1.1;
-  margin-bottom: 18px;
+  font-size: clamp(36px, 4.4vw, 58px);
+  line-height: 1.08;
+  margin-bottom: 16px;
 }
 
 .hero-contenido h1 em {
@@ -61,27 +58,84 @@
 
 .hero-contenido p {
   color: #d6c7be;
-  font-size: 17px;
+  font-size: 16px;
   line-height: 1.65;
-  margin-bottom: 28px;
-  max-width: 520px;
+  margin-bottom: 24px;
+  max-width: 540px;
 }
 
-.hero-insignias {
+/* Selector directo de Mesa QR en Portada */
+.panel-qr-portada {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  backdrop-filter: blur(10px);
+  border-radius: var(--radio-md);
+  padding: 18px 20px;
+  margin-bottom: 26px;
+}
+
+.panel-qr-portada-header {
   display: flex;
-  flex-wrap: wrap;
-  gap: 10px;
-  margin-bottom: 32px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
 }
 
-.hero-insignia {
-  background: rgba(255,255,255,0.1);
-  border: 1px solid rgba(255,255,255,0.16);
-  color: #fef3c7;
-  padding: 7px 16px;
+.panel-qr-portada-header strong {
+  color: #ffffff;
+  font-size: 13.5px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.panel-qr-portada-header small {
+  color: #fcd34d;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.grilla-qr-rapido {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 8px;
+}
+
+.btn-qr-mesa-directa {
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.16);
   border-radius: var(--radio-sm);
+  padding: 9px 10px;
+  color: #ffffff;
+  text-align: left;
+  transition: var(--transicion);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.btn-qr-mesa-directa strong {
   font-size: 13px;
   font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-qr-mesa-directa small {
+  font-size: 11px;
+  color: #c7b9b0;
+}
+
+.btn-qr-mesa-directa:hover {
+  background: var(--rojo);
+  border-color: var(--rojo);
+  transform: translateY(-1px);
+}
+
+.btn-qr-mesa-directa:hover small {
+  color: rgba(255, 255, 255, 0.85);
 }
 
 .hero-botones-grupo {
@@ -97,83 +151,86 @@
   gap: 8px;
   background: var(--rojo);
   color: #ffffff;
-  font-size: 16px;
-  font-weight: 800;
-  padding: 16px 34px;
+  font-size: 15px;
+  font-weight: 700;
+  padding: 14px 28px;
   border-radius: var(--radio-sm);
-  box-shadow: 0 6px 20px rgba(179,27,38,0.38);
+  box-shadow: 0 6px 20px rgba(168, 25, 35, 0.35);
   transition: var(--transicion);
 }
 
 .hero-cta:hover {
   background: var(--rojo-hover);
-  transform: translateY(-2px);
-  box-shadow: 0 10px 28px rgba(179,27,38,0.45);
+  transform: translateY(-1px);
 }
 
 .hero-cta-secundario {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  background: rgba(255,255,255,0.1);
-  border: 1.5px solid rgba(255,255,255,0.25);
+  background: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.22);
   color: #ffffff;
-  font-size: 15px;
-  font-weight: 800;
-  padding: 14px 26px;
+  font-size: 14px;
+  font-weight: 700;
+  padding: 13px 22px;
   border-radius: var(--radio-sm);
   transition: var(--transicion);
 }
 
 .hero-cta-secundario:hover {
-  background: rgba(255,255,255,0.2);
-  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.16);
 }
 
 /* Tarjetas de Beneficios */
 .tarjetas-beneficios {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 16px;
-  margin-top: 36px;
-  max-width: 600px;
+  gap: 14px;
+  margin-top: 32px;
 }
 
 .tarjeta-beneficio {
-  background: rgba(255,255,255,0.08);
-  border: 1px solid rgba(255,255,255,0.12);
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: var(--radio-md);
-  padding: 18px 14px;
-  text-align: center;
+  padding: 16px 14px;
   color: white;
   transition: var(--transicion);
 }
 
 .tarjeta-beneficio:hover {
-  background: rgba(255,255,255,0.14);
-  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .tarjeta-beneficio .icono-grande {
-  font-size: 28px;
-  margin-bottom: 6px;
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(252, 211, 77, 0.14);
+  color: #fcd34d;
+  display: grid;
+  place-items: center;
+  margin-bottom: 10px;
 }
 
 .tarjeta-beneficio strong {
   display: block;
-  font-size: 14px;
-  margin-bottom: 2px;
+  font-size: 13.5px;
+  margin-bottom: 3px;
 }
 
 .tarjeta-beneficio small {
-  font-size: 11px;
-  color: #d6c7be;
+  font-size: 11.5px;
+  color: #c7b9b0;
+  line-height: 1.4;
+  display: block;
 }
 
 /* Imagen lateral Hero */
 .hero-imagen {
   height: 100%;
-  min-height: 560px;
+  min-height: 580px;
   position: relative;
   overflow: hidden;
 }
@@ -183,15 +240,14 @@
   height: 100%;
   object-fit: cover;
   object-position: center;
-  opacity: 0.9;
-  filter: contrast(1.05) saturate(1.1);
+  opacity: 0.92;
 }
 
 .hero-imagen::before {
   content: '';
   position: absolute;
   inset: 0;
-  background: linear-gradient(to right, rgba(31,25,23,0.7) 0%, transparent 45%);
+  background: linear-gradient(to right, rgba(22, 18, 16, 0.78) 0%, transparent 45%);
   z-index: 1;
 }
 
@@ -202,18 +258,21 @@
     min-height: auto;
   }
   .hero-imagen {
-    height: 380px;
+    height: 360px;
     min-height: unset;
   }
   .hero-contenido {
-    padding: 60px 30px;
+    padding: 48px 24px;
     max-width: 100%;
   }
 }
 
 @media (max-width: 640px) {
   .hero-contenido h1 {
-    font-size: 34px;
+    font-size: 32px;
+  }
+  .grilla-qr-rapido {
+    grid-template-columns: repeat(2, 1fr);
   }
   .tarjetas-beneficios {
     grid-template-columns: 1fr;

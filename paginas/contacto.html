@@ -3,20 +3,39 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#b31b26">
-  <title>Pizza al Paso | Contacto y Ubicación</title>
+  <meta name="theme-color" content="#181412">
+  <title>Ubicación y Reservas | Pizza al Paso</title>
   <link rel="stylesheet" href="../estilos/global.css">
   <link rel="stylesheet" href="../estilos/contacto.css">
 </head>
 <body>
 
+  <!-- ══════════════ BARRA SUPERIOR DE SESIÓN DE MESA QR ══════════════ -->
+  <div class="barra-sesion-qr">
+    <div class="barra-sesion-interior">
+      <div class="sesion-qr-izq">
+        <span class="badge-qr-activo">
+          <span class="punto-mesa-verde" style="width:6px;height:6px;box-shadow:none;"></span>
+          Sesión QR en Mesa
+        </span>
+        <span id="textoSesionQr">Estás pidiendo desde <strong>Mesa 1 (Salón Principal)</strong> · Comanda conectada a cocina</span>
+      </div>
+      <div class="sesion-qr-acciones">
+        <button type="button" class="btn-link-qr" id="btnCambiarMesaBanner">
+          <svg class="ico ico-sm" viewBox="0 0 24 24"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          <span>Vincular otra Mesa / Ver QR</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- ══════════════ NAVBAR ══════════════ -->
   <header class="navbar">
     <div class="nav-interior">
-      <a href="../index.html" class="nav-marca">
+      <a href="../index.html?stay=1" class="nav-marca">
         <svg class="logo-svg" viewBox="0 0 100 100" fill="none" aria-label="Logo Pizza al Paso">
-          <circle cx="50" cy="50" r="46" fill="#b31b26" stroke="#f59e0b" stroke-width="3"/>
-          <circle cx="50" cy="50" r="41" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-dasharray="3 3"/>
+          <circle cx="50" cy="50" r="46" fill="#a81923" stroke="#d97706" stroke-width="3"/>
+          <circle cx="50" cy="50" r="41" fill="none" stroke="rgba(255,255,255,0.28)" stroke-width="1.5" stroke-dasharray="3 3"/>
           <path d="M50 20 L74 68 C64 74 36 74 26 68 Z" fill="#f8eedb"/>
           <path d="M24 67 C36 75 64 75 76 67 C74 72 62 78 50 78 C38 78 26 72 24 67 Z" fill="#d97706"/>
           <path d="M49 26 L69 66 C61 70 39 70 31 66 Z" fill="#c0262d"/>
@@ -28,114 +47,106 @@
         </svg>
         <div class="marca-texto">
           <strong>Pizza al Paso</strong>
-          <small>Autoservicio Digital</small>
+          <small>Autoservicio en Mesa</small>
         </div>
       </a>
 
       <nav class="nav-enlaces">
-        <a href="../index.html">Inicio</a>
-        <a href="menu.html">Menú</a>
-        <a href="nosotros.html">Nosotros</a>
-        <a href="contacto.html">Contacto</a>
+        <a href="../index.html?stay=1">Inicio</a>
+        <a href="menu.html">Carta Digital</a>
+        <a href="nosotros.html">Nuestra Tradición</a>
+        <a href="contacto.html" class="activo">Ubicación y Reservas</a>
       </nav>
 
       <div class="nav-acciones">
-        <!-- Selector de Mesa (Simulador QR) -->
-        <button class="nav-btn-mesa" id="btnMesaNav" title="Cambiar Mesa">
+        <button type="button" class="nav-btn-mesa" id="btnMesaNav" title="Mesa asignada">
           <span class="punto-mesa-verde"></span>
-          <span id="badgeMesaNav">Mesa 1 (Salón)</span>
-          <span style="font-size: 9px;">▼</span>
+          <span id="badgeMesaNav">Mesa 1 · Salón Principal</span>
+          <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="m6 9 6 6 6-6"/></svg>
         </button>
 
-        <!-- Guía rápida -->
-        <button class="nav-btn-icono" id="btnGuiaNav" title="Guía del autoservicio">
-          <span>💡</span>
+        <button type="button" class="nav-btn-icono" id="btnGuiaNav" title="Solicitar asistencia en mesa">
+          <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span class="txt-ocultable">Asistencia</span>
         </button>
 
-        <!-- Acceso Administración -->
-        <a href="../admin.html" class="nav-btn-icono" id="btnAdminNav" title="Acceso Administración / Personal" aria-label="Administración">
-          <span>👤</span>
+        <a href="../admin.html" class="nav-btn-icono" id="btnAdminNav" title="Panel de Administración" aria-label="Administración">
+          <svg class="ico ico-sm" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
         </a>
 
-        <!-- Mi Pedido / Carrito -->
-        <button class="nav-btn-carrito" id="btnNavCarrito" aria-label="Ver mi pedido">
-          <span>🛒</span>
-          <span>Mi Pedido</span>
+        <button type="button" class="nav-btn-carrito" id="btnNavCarrito" aria-label="Ver mi comanda">
+          <svg class="ico ico-sm" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+          <span>Mi Comanda</span>
           <span class="nav-insignia-carrito" id="insCarrito">0</span>
         </button>
       </div>
     </div>
   </header>
 
+  <div class="banner-pedido-activo" id="bannerPedidoActivo" style="display:none;"></div>
+
   <!-- ══════════════ SECCIÓN CONTACTO ══════════════ -->
   <section class="seccion-contacto">
     <div class="contenedor contacto-interior">
 
-      <!-- Información y Horarios -->
       <div class="contacto-info">
-        <span class="ojo-seccion">📍 Encuéntranos y Contáctanos</span>
-        <h2>¿Tienes alguna consulta o reserva?</h2>
-        <p>Estamos atentos para ayudarte. Puedes visitarnos en nuestro local en Miraflores, escribirnos por el formulario o contactarnos por teléfono.</p>
+        <span class="ojo-seccion">Atención al Comensal y Reservas</span>
+        <h2>Visítanos en Miraflores o reserva tu mesa</h2>
+        <p>Estamos a tu disposición para reservas grupales, eventos corporativos o consultas sobre nuestra carta artesanal.</p>
 
         <div class="tarjetas-info">
           <div class="tarjeta-info">
-            <div class="info-icono">📍</div>
+            <div class="info-icono">
+              <svg class="ico" viewBox="0 0 24 24" style="color:var(--rojo);"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+            </div>
             <div class="info-texto">
-              <h4>Dirección en Lima</h4>
-              <p>Jr. Artesanos 142, Miraflores · A 2 cuadras del Parque Kennedy</p>
+              <h4>Dirección del Salón</h4>
+              <p>Jr. Artesanos 142, Miraflores · A dos cuadras del Parque Kennedy</p>
             </div>
           </div>
 
           <div class="tarjeta-info">
-            <div class="info-icono">📞</div>
+            <div class="info-icono">
+              <svg class="ico" viewBox="0 0 24 24" style="color:var(--rojo);"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+            </div>
             <div class="info-texto">
-              <h4>Atención y Pedidos</h4>
-              <p>(01) 234-5678 · Cel: +51 987 654 321</p>
+              <h4>Central Telefónica</h4>
+              <p>(01) 234-5678 · WhatsApp Reservas: +51 987 654 321</p>
             </div>
           </div>
 
           <div class="tarjeta-info">
-            <div class="info-icono">💳</div>
-            <div class="info-texto">
-              <h4>Medios de Pago Aceptados</h4>
-              <p>Yape, Plin, Tarjetas Visa/Mastercard y Efectivo en mesa</p>
+            <div class="info-icono">
+              <svg class="ico" viewBox="0 0 24 24" style="color:var(--rojo);"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
             </div>
-          </div>
-
-          <div class="tarjeta-info">
-            <div class="info-icono">✉️</div>
             <div class="info-texto">
-              <h4>Correo Electrónico</h4>
-              <p>contacto@pizzaalpaso.pe · Respuesta en menos de 24 horas</p>
+              <h4>Medios de Pago en Salón</h4>
+              <p>Yape, Plin, Tarjetas Visa / Mastercard / Amex y Efectivo</p>
             </div>
           </div>
         </div>
 
         <div class="tabla-horarios">
-          <h4>🕐 Horarios de Atención en Salón y Horno</h4>
+          <h4>Horarios de Atención en Salón</h4>
           <div class="fila-horario">
             <span class="dia">Lunes a Jueves</span>
-            <span class="hora">12:00 pm – 10:00 pm</span>
+            <span class="hora">12:00 p.m. – 10:00 p.m.</span>
           </div>
           <div class="fila-horario">
             <span class="dia">Viernes y Sábados</span>
-            <span class="hora">12:00 pm – 11:30 pm</span>
+            <span class="hora">12:00 p.m. – 11:30 p.m.</span>
           </div>
           <div class="fila-horario">
-            <span class="dia">Domingos</span>
-            <span class="hora">12:30 pm – 9:30 pm</span>
-          </div>
-          <div class="fila-horario cerrado">
-            <span class="dia">Días Feriados</span>
-            <span class="hora">Horario de Fin de Semana</span>
+            <span class="dia">Domingos y Feriados</span>
+            <span class="hora">12:30 p.m. – 9:30 p.m.</span>
           </div>
         </div>
       </div>
 
       <!-- Formulario de Contacto -->
       <div class="formulario-contacto">
-        <h3>Escríbenos un Mensaje</h3>
-        <p>Déjanos tus dudas, consultas corporativas o comentarios sobre tu experiencia.</p>
+        <h3>Reserva de Mesa o Consulta</h3>
+        <p>Completa el formulario y confirmaremos tu solicitud a la brevedad.</p>
 
         <form id="formContacto">
           <div class="grilla-dos">
@@ -150,57 +161,41 @@
           </div>
 
           <div class="campo">
-            <label for="contactoAsunto">Motivo de contacto *</label>
+            <label for="contactoAsunto">Motivo de solicitud *</label>
             <select id="contactoAsunto" required>
               <option value="">Selecciona una opción</option>
-              <option value="reserva">Reserva de mesa especial</option>
-              <option value="evento">Cumpleaños o evento corporativo</option>
+              <option value="reserva">Reserva de mesa en salón o terraza</option>
+              <option value="evento">Reserva corporativa o celebración</option>
               <option value="duda">Consulta sobre ingredientes o alérgenos</option>
-              <option value="feedback">Felicitación o sugerencia</option>
-              <option value="otro">Otro motivo</option>
+              <option value="feedback">Comentarios sobre el servicio</option>
             </select>
           </div>
 
           <div class="campo">
             <label for="contactoMensaje">
-              Tu mensaje *
+              Detalle de la solicitud *
               <small style="float: right; color: var(--gris); font-weight: normal;" id="contadorMensaje">0 / 500</small>
             </label>
-            <textarea id="contactoMensaje" maxlength="500" placeholder="Cuéntanos en qué podemos ayudarte..." required></textarea>
+            <textarea id="contactoMensaje" maxlength="500" placeholder="Indica fecha, hora estimada y número de personas..." required></textarea>
           </div>
 
           <button type="submit" class="btn-primario btn-ancho" id="btnEnviarContacto">
-            Enviar Mensaje ✉️
+            Enviar Solicitud
           </button>
         </form>
 
         <div class="mensaje-enviado" id="mensajeEnviado">
-          <div class="icono-enviado">✉️</div>
-          <h4>¡Mensaje Recibido!</h4>
-          <p>Muchas gracias por contactarnos. Nuestro equipo te responderá muy pronto a tu correo.</p>
-          <button class="btn-secundario" id="btnNuevoMensaje" style="margin-top: 18px;">
-            Enviar Otro Mensaje
+          <div class="icono-exito">
+            <svg class="ico ico-lg" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <h4>Solicitud Recibida</h4>
+          <p>Nuestro equipo de reservas se comunicará contigo muy pronto.</p>
+          <button type="button" class="btn-secundario" id="btnNuevoMensaje" style="margin-top: 18px;">
+            Enviar otra consulta
           </button>
         </div>
       </div>
 
-    </div>
-
-    <!-- Mapa Simulado / Ubicación -->
-    <div class="contenedor">
-      <div class="mapa-placeholder">
-        <div class="mapa-imagen">
-          <span class="mapa-pin">📍</span>
-          <p>Local Miraflores · Jr. Artesanos 142</p>
-          <small>Frente al pasaje gastronómico · Estacionamiento cercano disponible</small>
-        </div>
-        <div class="mapa-footer">
-          <span>🚗 Estacionamiento vigilado a 50 metros &nbsp;|&nbsp; 🚴 Zona pet-friendly en terraza</span>
-          <a href="https://maps.google.com" target="_blank" rel="noopener noreferrer">
-            Abrir en Google Maps →
-          </a>
-        </div>
-      </div>
     </div>
   </section>
 
@@ -209,7 +204,7 @@
     <div class="contenedor pie-interior">
       <div class="pie-marca">
         <svg class="logo-svg" viewBox="0 0 100 100" fill="none" aria-hidden="true">
-          <circle cx="50" cy="50" r="46" fill="#b31b26" stroke="#f59e0b" stroke-width="3"/>
+          <circle cx="50" cy="50" r="46" fill="#a81923" stroke="#d97706" stroke-width="3"/>
           <path d="M50 20 L74 68 C64 74 36 74 26 68 Z" fill="#f8eedb"/>
           <path d="M24 67 C36 75 64 75 76 67 C74 72 62 78 50 78 C38 78 26 72 24 67 Z" fill="#d97706"/>
           <path d="M48 30 L65 64 C58 67 42 67 35 64 Z" fill="#fcd34d"/>
@@ -221,17 +216,22 @@
         </div>
       </div>
       <div class="pie-info">
-        <p>📍 Jr. Artesanos 142, Miraflores · Lima, Perú</p>
-        <p>📞 (01) 234-5678 &nbsp;|&nbsp; 📱 Yape / Plin / Tarjeta</p>
-        <p>⏰ Lun – Dom: 12:00 pm – 10:00 pm</p>
+        <p>Jr. Artesanos 142, Miraflores · Lima, Perú</p>
+        <p>Central: (01) 234-5678 · Aceptamos Yape, Plin y Tarjetas</p>
+        <p>Atención en salón: Lunes a Domingo de 12:00 p.m. a 10:30 p.m.</p>
       </div>
       <div class="pie-nota">
-        <p>Proyecto para el curso de<br><strong>Innovación y Transformación Digital</strong></p>
-        <small>Simulación académica de autoservicio vía QR.</small>
+        <p>Sistema de Comandas Digitales<br><strong>Arquitectura KDS + POS en Tiempo Real</strong></p>
+        <small>Respaldado con persistencia en PostgreSQL Neon.</small>
       </div>
     </div>
     <div class="pie-copia">
-      <p>© 2026 Pizza al Paso · Todos los derechos reservados · <a href="../cocina.html" style="color: #a89f91; text-decoration: underline; margin-left: 8px;">🔥 Cocina (KDS)</a> · <a href="../caja.html" style="color: #a89f91; text-decoration: underline; margin-left: 8px;">💵 Caja (POS)</a> · <a href="../admin.html" style="color: #a89f91; text-decoration: underline; margin-left: 8px;">🔒 Admin</a></p>
+      <span>© 2026 Pizza al Paso S.A.C.</span>
+      <span class="pie-enlaces-sistema">
+        <a href="../cocina.html">Pantalla Cocina (KDS)</a>
+        <a href="../caja.html">Terminal Caja (POS)</a>
+        <a href="../admin.html">Administración</a>
+      </span>
     </div>
   </footer>
 
@@ -240,30 +240,28 @@
   <aside class="sidebar-carrito" id="sidebarCarrito" aria-hidden="true">
     <div class="carrito-cabecera">
       <div>
-        <h3>🛒 Mi Pedido</h3>
-        <small id="labelMesaCarrito">Mesa 1 (Salón Principal)</small>
+        <h3>Mi Comanda en Mesa</h3>
+        <small id="labelMesaCarrito">Mesa 1 · Salón Principal</small>
       </div>
-      <button class="btn-cerrar-carrito" id="btnCerrarCarrito" aria-label="Cerrar pedido">×</button>
+      <button type="button" class="btn-cerrar-carrito" id="btnCerrarCarrito" aria-label="Cerrar comanda">×</button>
     </div>
     <div class="carrito-cuerpo">
       <div class="carrito-vacio" id="carritoVacio">
-        <div style="font-size:48px;margin-bottom:8px;">🍕</div>
-        <strong>Tu pedido está vacío</strong>
-        <p>Elige pizzas, acompañamientos o bebidas de la carta para empezar.</p>
-        <a href="menu.html" class="btn-primario" style="margin-top:18px;display:inline-flex;">
-          Explorar Carta →
+        <div class="carrito-vacio-icono">
+          <svg class="ico ico-lg" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+        </div>
+        <strong>Tu comanda está vacía</strong>
+        <p>Elige pizzas artesanales, entradas o bebidas de la carta para empezar.</p>
+        <a href="menu.html" class="btn-primario" style="margin-top:16px;display:inline-flex;">
+          Explorar Carta Digital →
         </a>
       </div>
       <div id="listaProductosCarrito"></div>
-      <div class="banner-sugerencia" id="bannerSugerencia" style="display:none;">
-        <span style="font-size:20px;">✦</span>
-        <div class="texto-sugerencia" id="textoSugerencia"></div>
-        <button class="btn-agregar-sugerencia" id="btnSugerencia">+ Agregar</button>
-      </div>
+      <div class="banner-sugerencia" id="bannerSugerencia" style="display:none;"></div>
     </div>
     <div class="carrito-pie">
       <div class="fila-calculo">
-        <span>Subtotal estimado</span>
+        <span>Subtotal de productos</span>
         <span id="txtSubtotal">S/ 0.00</span>
       </div>
       <div class="fila-calculo">
@@ -271,130 +269,129 @@
         <span>Incluido</span>
       </div>
       <div class="fila-total">
-        <span>Total a pagar</span>
+        <span>Total de la Orden</span>
         <strong id="txtTotal">S/ 0.00</strong>
       </div>
-      <button class="btn-primario btn-ancho" id="btnConfirmarPedido" disabled>
-        Confirmar Pedido →
+      <button type="button" class="btn-primario btn-ancho" id="btnConfirmarPedido" disabled>
+        Continuar y Enviar a Cocina
       </button>
     </div>
   </aside>
 
   <!-- ══════════════ MODAL SELECTOR DE MESA (QR) ══════════════ -->
-  <div class="fondo-modal" id="fondoModalMesa" style="display:none;">
-    <div class="caja-modal">
-      <div class="modal-cabecera">
-        <div>
-          <h3>📍 Simulador de Mesa QR</h3>
-          <small>Elige tu mesa como si hubieses escaneado el código QR físico</small>
-        </div>
-        <button class="btn-cerrar-modal" id="btnCerrarModalMesa">×</button>
+  <dialog class="modal-nativo" id="fondoModalMesa" closedby="any" aria-labelledby="tituloModalMesa">
+    <div class="modal-cabecera">
+      <div>
+        <h3 id="tituloModalMesa">Asignación de Mesa por Código QR</h3>
+        <small>Vinculación automática mediante parámetro URL (?mesa=1..6)</small>
       </div>
-      <div class="modal-cuerpo">
-        <p style="font-size:13px; color:var(--gris); margin-bottom:14px;">
-          En el restaurante, cada mesa cuenta con su propio QR que abre esta web vinculada a la mesa correspondiente:
-        </p>
-        <div class="grilla-mesas" id="grillaMesas">
-          <button class="item-mesa-btn activo" data-mesa="Mesa 1">
-            <strong>Mesa 1</strong>
-            <small>Salón Principal</small>
-          </button>
-          <button class="item-mesa-btn" data-mesa="Mesa 2">
-            <strong>Mesa 2</strong>
-            <small>Ventana</small>
-          </button>
-          <button class="item-mesa-btn" data-mesa="Mesa 3">
-            <strong>Mesa 3</strong>
-            <small>Terraza</small>
-          </button>
-          <button class="item-mesa-btn" data-mesa="Mesa 4">
-            <strong>Mesa 4</strong>
-            <small>Familiar</small>
-          </button>
-          <button class="item-mesa-btn" data-mesa="Mesa 5">
-            <strong>Mesa 5</strong>
-            <small>Zona VIP</small>
-          </button>
+      <button type="button" class="btn-cerrar-modal" id="btnCerrarModalMesa" aria-label="Cerrar ventana">×</button>
+    </div>
+    <div class="modal-cuerpo">
+      <div class="grilla-mesas" id="grillaMesas">
+        <button type="button" class="item-mesa-btn activo" data-mesa="1"><div><strong>Mesa 1</strong><small>Salón Principal</small></div><span class="mesa-cap">4 pers.</span></button>
+        <button type="button" class="item-mesa-btn" data-mesa="2"><div><strong>Mesa 2</strong><small>Junto a Ventana</small></div><span class="mesa-cap">2 pers.</span></button>
+        <button type="button" class="item-mesa-btn" data-mesa="3"><div><strong>Mesa 3</strong><small>Terraza Exterior</small></div><span class="mesa-cap">4 pers.</span></button>
+        <button type="button" class="item-mesa-btn" data-mesa="4"><div><strong>Mesa 4</strong><small>Salón Familiar</small></div><span class="mesa-cap">6 pers.</span></button>
+        <button type="button" class="item-mesa-btn" data-mesa="5"><div><strong>Mesa 5</strong><small>Zona Reservada VIP</small></div><span class="mesa-cap">6 pers.</span></button>
+        <button type="button" class="item-mesa-btn" data-mesa="6"><div><strong>Mesa 6</strong><small>Barra Horno de Leña</small></div><span class="mesa-cap">2 pers.</span></button>
+      </div>
+      <div class="qr-preview-panel">
+        <div class="qr-svg-caja" id="qrSvgPreview"></div>
+        <div class="qr-info-detalle">
+          <strong id="qrPreviewTitulo">Código QR asignado a Mesa 1</strong>
+          <p>Al escanear este QR con la cámara del celular se asigna la mesa automáticamente.</p>
+          <div class="qr-url-box" id="qrPreviewUrl">http://localhost:3000/paginas/menu.html?mesa=1</div>
+          <button type="button" class="btn-secundario" id="btnCopiarUrlQr" style="margin-top:8px; padding:6px 12px; font-size:12px;">Copiar Enlace QR</button>
         </div>
       </div>
     </div>
-  </div>
+  </dialog>
 
+  <!-- ══════════════ MODAL ASISTENCIA EN MESA ══════════════ -->
+  <dialog class="modal-nativo" id="modalAsistenciaMesa" closedby="any" aria-labelledby="tituloModalAsistencia">
+    <div class="modal-cabecera">
+      <div>
+        <h3 id="tituloModalAsistencia">Asistencia en Mesa</h3>
+        <small id="subtituloAsistenciaMesa">Atención directa para tu ubicación</small>
+      </div>
+      <button type="button" class="btn-cerrar-modal" id="btnCerrarModalAsistencia" aria-label="Cerrar ventana">×</button>
+    </div>
+    <div class="modal-cuerpo">
+      <div class="grilla-mozo-opciones" id="grillaAsistenciaOpciones">
+        <button type="button" class="item-mozo-btn" data-asistencia="Solicitar la cuenta en mesa">
+          <div><strong>Solicitar la Cuenta / Pago en Mesa</strong><small>Un encargado se acercará con el POS o comprobante.</small></div>
+        </button>
+        <button type="button" class="item-mozo-btn" data-asistencia="Presencia de mesero en mesa">
+          <div><strong>Llamar a un Mesero</strong><small>Para consultas sobre la carta o atención en salón.</small></div>
+        </button>
+        <button type="button" class="item-mozo-btn" data-asistencia="Cubiertos, servilletas o salsas adicionales">
+          <div><strong>Solicitar Cubiertos, Servilletas o Salsas</strong><small>Platos adicionales para compartir, aceite picante o servilletas.</small></div>
+        </button>
+      </div>
+    </div>
+  </dialog>
 
   <!-- ══════════════ MODAL CHECKOUT ══════════════ -->
-  <div class="fondo-modal" id="fondoCheckout" style="display:none;">
-    <div class="caja-modal">
-      <div class="modal-cabecera">
-        <div>
-          <h3>Confirmar Pedido</h3>
-          <small>Envío directo a pantalla de cocina (KDS)</small>
-        </div>
-        <button class="btn-cerrar-modal" id="btnCerrarCheckout">×</button>
+  <dialog class="modal-nativo" id="fondoCheckout" closedby="any" aria-labelledby="tituloModalCheckout">
+    <div class="modal-cabecera">
+      <div>
+        <h3 id="tituloModalCheckout">Confirmar Comanda en Mesa</h3>
+        <small>Ubicación vinculada: <strong id="checkoutMesaResumen" style="color:var(--rojo);">Mesa 1</strong></small>
       </div>
-      <div class="modal-cuerpo">
-        <form id="formularioPedido">
-          <div class="campo-formulario">
-            <label for="nombreCliente">Nombre para el pedido:</label>
-            <input type="text" id="nombreCliente" placeholder="Ej. Carlos Mendoza" required>
-          </div>
-          <div class="campo-formulario">
-            <label>Preferencia de pago:</label>
-            <div class="grilla-pago" id="grillaPago">
-              <div class="opcion-pago seleccionada" data-pago="Yape / Plin"><span>📱</span>Yape/Plin</div>
-              <div class="opcion-pago" data-pago="Tarjeta"><span>💳</span>Tarjeta</div>
-              <div class="opcion-pago" data-pago="Efectivo"><span>💵</span>En Mesa</div>
-            </div>
-          </div>
-          <div class="campo-formulario">
-            <label for="notasPedido">Notas para el maestro pizzero (opcional):</label>
-            <textarea id="notasPedido" rows="2" placeholder="Ej. masa bien crocante, sin orégano…"></textarea>
-          </div>
-          <div class="aviso-kds">
-            🔬 <strong>Transformación Digital:</strong> Al confirmar, tu orden viaja directamente al sistema KDS de la cocina.
-          </div>
-          <button type="submit" class="btn-primario btn-ancho">Enviar Pedido a Cocina 🔥</button>
-        </form>
-      </div>
+      <button type="button" class="btn-cerrar-modal" id="btnCerrarCheckout" aria-label="Cerrar ventana">×</button>
     </div>
-  </div>
+    <div class="modal-cuerpo">
+      <form id="formularioPedido">
+        <div class="campo-formulario">
+          <label for="nombreCliente">Nombre de referencia para la mesa:</label>
+          <input type="text" id="nombreCliente" placeholder="Ej. Carlos Mendoza" required autofocus>
+        </div>
+        <div class="campo-formulario">
+          <label>Modalidad de pago preferida:</label>
+          <div class="grilla-pago" id="grillaPago">
+            <div class="opcion-pago seleccionada" data-pago="Yape / Plin"><span>Yape / Plin</span></div>
+            <div class="opcion-pago" data-pago="Tarjeta"><span>Tarjeta POS</span></div>
+            <div class="opcion-pago" data-pago="Efectivo"><span>Efectivo</span></div>
+          </div>
+        </div>
+        <div class="campo-formulario">
+          <label for="notasPedido">Indicaciones para cocina (opcional):</label>
+          <textarea id="notasPedido" rows="2" placeholder="Ej. masa bien crocante, sin orégano..."></textarea>
+        </div>
+        <button type="submit" class="btn-primario btn-ancho">Enviar Comanda a Cocina</button>
+      </form>
+    </div>
+  </dialog>
 
   <!-- ══════════════ MODAL ÉXITO / KDS ══════════════ -->
-  <div class="fondo-modal" id="fondoExito" style="display:none;">
-    <div class="caja-modal modal-exito">
-      <div class="icono-exito">✓</div>
-      <h3>¡Pedido Enviado!</h3>
-      <p id="mensajeExito">Tu pedido está en cocina.</p>
+  <dialog class="modal-nativo" id="fondoExito" closedby="any" aria-labelledby="tituloModalExito">
+    <div class="modal-exito">
+      <div class="icono-exito">
+        <svg class="ico ico-lg" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </div>
+      <h3 id="tituloModalExito">Comanda Enviada a Cocina</h3>
+      <p id="mensajeExito">Tu pedido está en preparación.</p>
       <div class="seguimiento-kds">
-        <div class="paso-kds listo">
-          <div class="punto-kds">✓</div>
-          <small>Recibido</small>
-        </div>
-        <div class="paso-kds activo" id="paso2KDS">
-          <div class="punto-kds">🔥</div>
-          <small>Al Horno</small>
-        </div>
-        <div class="paso-kds" id="paso3KDS">
-          <div class="punto-kds">🍕</div>
-          <small>En Mesa</small>
-        </div>
+        <div class="paso-kds activo" id="paso1KDS"><div class="punto-kds">1</div><small>Recibido</small></div>
+        <div class="paso-kds" id="paso2KDS"><div class="punto-kds">2</div><small>En Horno</small></div>
+        <div class="paso-kds" id="paso3KDS"><div class="punto-kds">3</div><small>En Mesa</small></div>
       </div>
       <div class="recibo-digital" id="reciboDigital"></div>
-      <button class="btn-primario btn-ancho" id="btnTerminarPedido">Volver a la Carta</button>
+      <button type="button" class="btn-primario btn-ancho" id="btnTerminarPedido">Continuar</button>
     </div>
-  </div>
+  </dialog>
 
-  <!-- ══════════════ BARRA FIJA MÓVIL ══════════════ -->
   <div class="barra-carrito-fija" id="barraCarritoFija" style="display:none;">
     <div class="barra-izq">
       <span class="contador-barra" id="contadorBarra">0</span>
-      <span>Total: <strong id="totalBarra">S/ 0.00</strong></span>
+      <span>Total Comanda: <strong id="totalBarra">S/ 0.00</strong></span>
     </div>
-    <button class="btn-accion-barra" id="btnBarraFija">Ver mi Pedido →</button>
+    <button type="button" class="btn-accion-barra" id="btnBarraFija">Ver Comanda</button>
   </div>
 
-  <!-- ══════════════ TOAST ══════════════ -->
   <div class="toast" id="toast" role="status" aria-live="polite">
-    <span id="toastIcono">✨</span>
+    <span class="toast-dot"></span>
     <span id="toastTexto">Acción realizada</span>
   </div>
 

@@ -3,8 +3,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#1f1917">
-  <title>Pizza al Paso | Panel de Administración</title>
+  <meta name="theme-color" content="#181412">
+  <title>Panel de Administración | Pizza al Paso</title>
   <script>
     if (window.location.protocol === 'file:') {
       window.location.replace('http://localhost:3000/admin.html');
@@ -20,9 +20,8 @@
        ═══════════════════════════════════════════════ -->
   <main class="pantalla-login" id="pantallaLogin">
     <div class="caja-login">
-      <!-- Emblema / Logo de Pizza al Paso -->
       <svg class="login-emblema" viewBox="0 0 100 100" fill="none" aria-label="Logo Pizza al Paso">
-        <circle cx="50" cy="50" r="46" fill="#b31b26" stroke="#f59e0b" stroke-width="3"/>
+        <circle cx="50" cy="50" r="46" fill="#a81923" stroke="#d97706" stroke-width="3"/>
         <circle cx="50" cy="50" r="41" fill="none" stroke="rgba(255,255,255,0.3)" stroke-width="1.5" stroke-dasharray="3 3"/>
         <path d="M50 20 L74 68 C64 74 36 74 26 68 Z" fill="#f8eedb"/>
         <path d="M24 67 C36 75 64 75 76 67 C74 72 62 78 50 78 C38 78 26 72 24 67 Z" fill="#d97706"/>
@@ -33,13 +32,12 @@
         <circle cx="43" cy="59" r="3" fill="#991b1b"/>
       </svg>
 
-      <h2>Panel de Control</h2>
-      <p>Acceso exclusivo para el administrador del restaurante.</p>
+      <h2>Administración Comercial</h2>
+      <p>Gestión de comandas, catálogo gastronómico y códigos QR de salón.</p>
 
       <div class="login-credenciales-demo">
-        <strong>🔑 Credenciales de demostración:</strong>
-        <div>Usuario: <code>admin</code></div>
-        <div>Contraseña: <code>admin123</code></div>
+        <strong>Credenciales de acceso:</strong>
+        <div>Usuario: <code>admin</code> &nbsp;·&nbsp; Contraseña: <code>admin123</code></div>
       </div>
 
       <form class="login-form" id="formAdminLogin">
@@ -56,11 +54,11 @@
         <div id="adminLoginError" style="display:none; color:#dc2626; font-size:13px; font-weight:700; margin-bottom:14px; text-align:left;"></div>
 
         <button type="submit" class="btn-primario btn-ancho">
-          Ingresar al Panel 🔐
+          Ingresar al Panel
         </button>
       </form>
 
-      <a href="index.html" class="login-volver-enlace">← Volver a la Tienda de Clientes</a>
+      <a href="paginas/menu.html" class="login-volver-enlace">← Volver a la Carta Digital</a>
     </div>
   </main>
 
@@ -72,29 +70,29 @@
     <header class="admin-navbar">
       <div class="admin-nav-izq">
         <svg style="width:34px; height:34px;" viewBox="0 0 100 100" fill="none">
-          <circle cx="50" cy="50" r="46" fill="#b31b26" stroke="#f59e0b" stroke-width="3"/>
+          <circle cx="50" cy="50" r="46" fill="#a81923" stroke="#d97706" stroke-width="3"/>
           <path d="M50 20 L74 68 C64 74 36 74 26 68 Z" fill="#f8eedb"/>
           <path d="M24 67 C36 75 64 75 76 67 C74 72 62 78 50 78 C38 78 26 72 24 67 Z" fill="#d97706"/>
           <path d="M48 30 L65 64 C58 67 42 67 35 64 Z" fill="#fcd34d"/>
         </svg>
         <div>
-          <strong style="font-size:16px;">Pizza al Paso · Panel Admin</strong>
+          <strong style="font-size:16px;">Pizza al Paso · Dirección Operativa</strong>
         </div>
-        <span class="admin-badge">Administrador Activo</span>
+        <span class="admin-badge">Sesión Activa</span>
       </div>
 
       <div class="admin-nav-der">
         <a href="cocina.html" target="_blank" class="btn-admin-tienda">
-          🔥 Pantalla Cocina (KDS)
+          Monitor Cocina (KDS)
         </a>
         <a href="caja.html" target="_blank" class="btn-admin-tienda">
-          💵 Caja (POS)
+          Terminal Caja (POS)
         </a>
-        <a href="index.html" target="_blank" class="btn-admin-tienda">
-          🌐 Ver Tienda
+        <a href="paginas/menu.html" target="_blank" class="btn-admin-tienda">
+          Carta QR
         </a>
-        <button class="btn-admin-logout" id="btnAdminLogout">
-          Cerrar Sesión 🚪
+        <button type="button" class="btn-admin-logout" id="btnAdminLogout">
+          Cerrar Sesión
         </button>
       </div>
     </header>
@@ -102,9 +100,10 @@
     <!-- Barra de Pestañas -->
     <nav class="admin-tabs-bar">
       <div class="admin-tabs-interior" id="adminTabsBar">
-        <button class="admin-tab-btn activo" data-tab="tabMetricas">📋 Pedidos y Ventas</button>
-        <button class="admin-tab-btn" data-tab="tabProductos">🍕 Gestión de Productos (CRUD)</button>
-        <button class="admin-tab-btn" data-tab="tabEstadisticas">📈 Top Productos y Estadísticas</button>
+        <button type="button" class="admin-tab-btn activo" data-tab="tabMetricas">Comandas y Ventas</button>
+        <button type="button" class="admin-tab-btn" data-tab="tabProductos">Catálogo de Carta (CRUD)</button>
+        <button type="button" class="admin-tab-btn" data-tab="tabMesasQr">Códigos QR de Mesas</button>
+        <button type="button" class="admin-tab-btn" data-tab="tabEstadisticas">Analítica y Ranking</button>
       </div>
     </nav>
 
@@ -113,36 +112,43 @@
 
       <!-- ─── PESTAÑA 1: INFORMES Y PEDIDOS ─── -->
       <section class="admin-seccion activa" id="tabMetricas">
-        <!-- Métricas Principales (KPIs) -->
         <div class="grilla-metricas">
           <div class="tarjeta-metrica">
-            <div class="metrica-icono verde">💰</div>
+            <div class="metrica-icono verde">
+              <svg class="ico ico-lg" viewBox="0 0 24 24"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
             <div class="metrica-info">
-              <small>Ventas Totales Registradas</small>
+              <small>Facturación Total</small>
               <strong id="kpiVentasTotales">S/ 0.00</strong>
             </div>
           </div>
 
           <div class="tarjeta-metrica">
-            <div class="metrica-icono">📋</div>
+            <div class="metrica-icono">
+              <svg class="ico ico-lg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            </div>
             <div class="metrica-info">
-              <small>Total de Pedidos</small>
+              <small>Comandas Emitidas</small>
               <strong id="kpiTotalComandas">0</strong>
             </div>
           </div>
 
           <div class="tarjeta-metrica">
-            <div class="metrica-icono dorado">🍕</div>
+            <div class="metrica-icono dorado">
+              <svg class="ico ico-lg" viewBox="0 0 24 24"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/></svg>
+            </div>
             <div class="metrica-info">
-              <small>Productos Activos en Carta</small>
+              <small>Platos Activos en Carta</small>
               <strong id="kpiTotalProductos">0</strong>
             </div>
           </div>
 
           <div class="tarjeta-metrica">
-            <div class="metrica-icono">💳</div>
+            <div class="metrica-icono">
+              <svg class="ico ico-lg" viewBox="0 0 24 24"><rect x="2" y="5" width="20" height="14" rx="2"/><line x1="2" y1="10" x2="22" y2="10"/></svg>
+            </div>
             <div class="metrica-info">
-              <small>Ticket Promedio de Venta</small>
+              <small>Ticket Promedio por Mesa</small>
               <strong id="kpiTicketPromedio">S/ 0.00</strong>
             </div>
           </div>
@@ -152,12 +158,12 @@
         <div class="admin-card-bloque">
           <div class="admin-card-header">
             <div>
-              <h3>Pedidos en Tiempo Real (Sistema KDS)</h3>
-              <p>Cambia el estado de cada pedido y observa cómo se actualiza automáticamente.</p>
+              <h3>Registro de Comandas en Tiempo Real</h3>
+              <p>Monitorea o actualiza el estado de despacho de cada mesa conectada.</p>
             </div>
             <div>
-              <button class="btn-secundario" id="btnLimpiarPedidos" style="font-size:12px; padding:8px 14px;">
-                Vaciar Historial
+              <button type="button" class="btn-secundario" id="btnLimpiarPedidos" style="font-size:12px; padding:8px 14px;">
+                Reiniciar Historial de Comandas
               </button>
             </div>
           </div>
@@ -167,17 +173,15 @@
               <thead>
                 <tr>
                   <th>Código</th>
-                  <th>Cliente</th>
-                  <th>Mesa</th>
-                  <th>Detalle del Pedido</th>
-                  <th>Total & Pago</th>
+                  <th>Comensal</th>
+                  <th>Mesa Asignada</th>
+                  <th>Detalle de la Comanda</th>
+                  <th>Importe &amp; Pago</th>
                   <th>Estado en Cocina</th>
                   <th>Hora</th>
                 </tr>
               </thead>
-              <tbody id="tbodyPedidos">
-                <!-- Rellenado por scripts/admin.js -->
-              </tbody>
+              <tbody id="tbodyPedidos"></tbody>
             </table>
           </div>
         </div>
@@ -188,15 +192,15 @@
         <div class="admin-card-bloque">
           <div class="admin-card-header">
             <div>
-              <h3>Catálogo de Productos en la Carta</h3>
-              <p>Agrega, edita o elimina productos. Cualquier cambio se refleja inmediatamente en la carta de los clientes.</p>
+              <h3>Catálogo de Productos en la Carta Digital</h3>
+              <p>Administra los platos, precios y descripciones sincronizados con PostgreSQL Neon.</p>
             </div>
             <div style="display:flex; gap:10px;">
-              <button class="btn-secundario" id="btnResetProductos" style="font-size:12px; padding:9px 14px;">
-                Restablecer Menú Original
+              <button type="button" class="btn-secundario" id="btnResetProductos" style="font-size:12px; padding:9px 14px;">
+                Restablecer Catálogo Base
               </button>
-              <button class="btn-primario" id="btnNuevoProducto" style="font-size:13px; padding:10px 18px;">
-                + Agregar Nuevo Producto
+              <button type="button" class="btn-primario" id="btnNuevoProducto" style="font-size:13px; padding:10px 18px;">
+                + Nuevo Producto
               </button>
             </div>
           </div>
@@ -205,52 +209,63 @@
             <table class="admin-tabla">
               <thead>
                 <tr>
-                  <th>Foto</th>
-                  <th>Nombre y Descripción</th>
+                  <th>Imagen</th>
+                  <th>Producto e Ingredientes</th>
                   <th>Categoría</th>
                   <th>Precio</th>
-                  <th>Etiqueta</th>
+                  <th>Distintivo</th>
                   <th>Acciones</th>
                 </tr>
               </thead>
-              <tbody id="tbodyProductos">
-                <!-- Rellenado por scripts/admin.js -->
-              </tbody>
+              <tbody id="tbodyProductos"></tbody>
             </table>
           </div>
         </div>
       </section>
 
-      <!-- ─── PESTAÑA 3: TOP PRODUCTOS Y ESTADÍSTICAS ─── -->
+      <!-- ─── PESTAÑA 3: CÓDIGOS QR DE MESAS ─── -->
+      <section class="admin-seccion" id="tabMesasQr">
+        <div class="admin-card-bloque">
+          <div class="admin-card-header">
+            <div>
+              <h3>Generador de Códigos QR para Mesas del Salón</h3>
+              <p>Cada código QR contiene la URL con el parámetro de mesa correspondiente (<code>?mesa=1</code> a <code>?mesa=6</code>) para asignación automática al escanear.</p>
+            </div>
+            <div>
+              <button type="button" class="btn-primario" onclick="window.print()" style="font-size:13px; padding:10px 18px;">
+                Imprimir Tarjetas QR de Salón
+              </button>
+            </div>
+          </div>
+
+          <div id="contenedorTarjetasQrAdmin" style="padding: 24px; display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px;">
+            <!-- Rellenado dinámicamente por scripts/admin.js -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ─── PESTAÑA 4: TOP PRODUCTOS Y ESTADÍSTICAS ─── -->
       <section class="admin-seccion" id="tabEstadisticas">
         <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 24px;">
-          
-          <!-- Top Productos más Vendidos -->
           <div class="admin-card-bloque">
             <div class="admin-card-header">
               <div>
-                <h3>🏆 Top 5 Productos más Vendidos</h3>
-                <p>Ranking según volumen de pedidos confirmados y recaudación generada.</p>
+                <h3>Ranking de Platos más Solicitados</h3>
+                <p>Volumen de unidades despachadas e ingresos generados por producto.</p>
               </div>
             </div>
-            <div id="contenedorTopProductos" style="padding: 20px;">
-              <!-- Rellenado por scripts/admin.js -->
-            </div>
+            <div id="contenedorTopProductos" style="padding: 20px;"></div>
           </div>
 
-          <!-- Métricas de Métodos de Pago y Desglose -->
           <div class="admin-card-bloque">
             <div class="admin-card-header">
               <div>
-                <h3>💳 Métodos de Pago y Estado del Negocio</h3>
-                <p>Distribución de ingresos según el canal de cobro.</p>
+                <h3>Distribución por Medio de Pago y Flujo KDS</h3>
+                <p>Desglose financiero y operativo de las órdenes registradas.</p>
               </div>
             </div>
-            <div id="contenedorMetodosPago" style="padding: 20px;">
-              <!-- Rellenado por scripts/admin.js -->
-            </div>
+            <div id="contenedorMetodosPago" style="padding: 20px;"></div>
           </div>
-
         </div>
       </section>
 
@@ -258,83 +273,81 @@
   </div>
 
   <!-- ═══════════════════════════════════════════════
-       3. MODAL AGREGAR / EDITAR PRODUCTO (CRUD)
+       3. MODAL AGREGAR / EDITAR PRODUCTO (CRUD - <dialog>)
        ═══════════════════════════════════════════════ -->
-  <div class="fondo-modal" id="fondoModalProducto" style="display: none;">
-    <div class="caja-modal" style="max-width: 580px;">
-      <div class="modal-cabecera">
-        <div>
-          <h3 id="modalProdTitulo">Agregar Nuevo Producto</h3>
-          <small>Configura los detalles del ítem para la carta digital</small>
-        </div>
-        <button class="btn-cerrar-modal" id="btnCerrarModalProd">×</button>
+  <dialog class="modal-nativo" id="fondoModalProducto" closedby="any" aria-labelledby="modalProdTitulo" style="max-width: 580px;">
+    <div class="modal-cabecera">
+      <div>
+        <h3 id="modalProdTitulo">Agregar Nuevo Producto</h3>
+        <small>Configura los datos del plato para la carta digital</small>
       </div>
-
-      <div class="modal-cuerpo">
-        <form id="formProducto">
-          <input type="hidden" id="prodId">
-
-          <div class="campo-formulario">
-            <label for="prodNombre">Nombre del Producto *</label>
-            <input type="text" id="prodNombre" placeholder="Ej. Pizza Cuatro Estaciones" required>
-          </div>
-
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px;">
-            <div class="campo-formulario">
-              <label for="prodCategoria">Categoría *</label>
-              <select id="prodCategoria" required>
-                <option value="pizza">🍕 Pizzas</option>
-                <option value="acompañamiento">🥖 Acompañamientos</option>
-                <option value="bebida">🥤 Bebidas</option>
-                <option value="postre">🍰 Postres</option>
-              </select>
-            </div>
-
-            <div class="campo-formulario">
-              <label for="prodPrecio">Precio (S/) *</label>
-              <input type="number" id="prodPrecio" step="0.10" min="1" placeholder="Ej. 24.90" required>
-            </div>
-          </div>
-
-          <div class="campo-formulario">
-            <label for="prodImagen">URL de la Imagen (Foto gastronómica) *</label>
-            <input type="url" id="prodImagen" placeholder="https://images.unsplash.com/..." required>
-            <div class="img-preview-box" id="previewImagenBox">
-              <span>Vista previa de la foto</span>
-            </div>
-          </div>
-
-          <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px;">
-            <div class="campo-formulario">
-              <label for="prodEtiqueta">Etiqueta Destacada</label>
-              <input type="text" id="prodEtiqueta" placeholder="Ej. Especial del Chef 🔥">
-            </div>
-
-            <div class="campo-formulario">
-              <label for="prodPreferencia">Categoría de Recomendación</label>
-              <select id="prodPreferencia">
-                <option value="popular">🔥 Más Pedida</option>
-                <option value="carnes">🥩 Carnes</option>
-                <option value="veggie">🌱 Veggie</option>
-                <option value="economica">💰 Económica</option>
-                <option value="compartir">👥 Para Compartir</option>
-                <option value="combo">⭐ Con Combo</option>
-              </select>
-            </div>
-          </div>
-
-          <div class="campo-formulario">
-            <label for="prodDescripcion">Descripción gastronómica e ingredientes *</label>
-            <textarea id="prodDescripcion" rows="3" placeholder="Salsa pomodoro, mozzarella fresca, albahaca y aceite de oliva..." required></textarea>
-          </div>
-
-          <button type="submit" class="btn-primario btn-ancho" style="margin-top: 10px;">
-            Guardar y Publicar en la Carta 💾
-          </button>
-        </form>
-      </div>
+      <button type="button" class="btn-cerrar-modal" id="btnCerrarModalProd" aria-label="Cerrar ventana">×</button>
     </div>
-  </div>
+
+    <div class="modal-cuerpo">
+      <form id="formProducto">
+        <input type="hidden" id="prodId">
+
+        <div class="campo-formulario">
+          <label for="prodNombre">Nombre del Plato o Producto *</label>
+          <input type="text" id="prodNombre" placeholder="Ej. Pizza Cuatro Estaciones" required>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px;">
+          <div class="campo-formulario">
+            <label for="prodCategoria">Categoría *</label>
+            <select id="prodCategoria" required>
+              <option value="pizza">Pizzas Artesanales</option>
+              <option value="entradas">Entradas y Panes</option>
+              <option value="bebidas">Bebidas</option>
+              <option value="postres">Postres</option>
+            </select>
+          </div>
+
+          <div class="campo-formulario">
+            <label for="prodPrecio">Precio Unitario (S/) *</label>
+            <input type="number" id="prodPrecio" step="0.10" min="1" placeholder="Ej. 24.90" required>
+          </div>
+        </div>
+
+        <div class="campo-formulario">
+          <label for="prodImagen">URL de Fotografía Gastronómica *</label>
+          <input type="url" id="prodImagen" placeholder="https://images.unsplash.com/..." required>
+          <div class="img-preview-box" id="previewImagenBox">
+            <span>Vista previa de la imagen</span>
+          </div>
+        </div>
+
+        <div style="display:grid; grid-template-columns: 1fr 1fr; gap:14px;">
+          <div class="campo-formulario">
+            <label for="prodEtiqueta">Distintivo en Carta</label>
+            <input type="text" id="prodEtiqueta" placeholder="Ej. Selección del Chef">
+          </div>
+
+          <div class="campo-formulario">
+            <label for="prodPreferencia">Perfil de Recomendación JEV</label>
+            <select id="prodPreferencia">
+              <option value="popular">Más Pedida</option>
+              <option value="carnes">Selección Carnes</option>
+              <option value="veggie">Vegetariana</option>
+              <option value="economica">Individual / Clásica</option>
+              <option value="familiar">Familiar / Para Compartir</option>
+              <option value="premium">Gourmet / Premium</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="campo-formulario">
+          <label for="prodDescripcion">Descripción e Ingredientes *</label>
+          <textarea id="prodDescripcion" rows="3" placeholder="Salsa pomodoro italiano, mozzarella fior di latte, albahaca fresca..." required></textarea>
+        </div>
+
+        <button type="submit" class="btn-primario btn-ancho" style="margin-top: 8px;">
+          Guardar y Publicar en la Carta
+        </button>
+      </form>
+    </div>
+  </dialog>
 
   <script src="scripts/api.js"></script>
   <script src="scripts/admin.js"></script>
