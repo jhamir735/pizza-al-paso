@@ -10,13 +10,11 @@ El sistema se encuentra desplegado y activo en internet. Cualquier integrante de
 
 | Modulo | Descripcion | Enlace en la Nube |
 | :--- | :--- | :--- |
-| **Inicio** | Portal principal del restaurante | [https://pizza-al-paso.onrender.com](https://pizza-al-paso.onrender.com) |
-| **Menu QR (Clientes)** | Carta digital, seleccion de mesa, carrito y comanda en vivo | [https://pizza-al-paso.onrender.com/paginas/menu.html](https://pizza-al-paso.onrender.com/paginas/menu.html) |
-| **Cocina (KDS)** | Pantalla para pizzeros (Recibido, Al Horno, En Mesa) | [https://pizza-al-paso.onrender.com/cocina.html](https://pizza-al-paso.onrender.com/cocina.html) |
-| **Caja (POS)** | Registro de cobros (Efectivo, Yape/Plin, Tarjetas) y boletas | [https://pizza-al-paso.onrender.com/caja.html](https://pizza-al-paso.onrender.com/caja.html) |
-| **Administracion** | Panel de metricas, ventas y catalogo de productos | [https://pizza-al-paso.onrender.com/admin.html](https://pizza-al-paso.onrender.com/admin.html) |
-| **Nosotros** | Informacion institucional del restaurante | [https://pizza-al-paso.onrender.com/paginas/nosotros.html](https://pizza-al-paso.onrender.com/paginas/nosotros.html) |
-| **Contacto** | Ubicacion, canales de atencion y reservas | [https://pizza-al-paso.onrender.com/paginas/contacto.html](https://pizza-al-paso.onrender.com/paginas/contacto.html) |
+| **Inicio** | Portal principal del restaurante | [https://pizza-al-paso.onrender.com](https://pizza-al-paso-1.onrender.com/) |
+| **Menu QR (Clientes)** | Carta digital, seleccion de mesa, carrito y comanda en vivo | [https://pizza-al-paso.onrender.com/paginas/menu.html](https://pizza-al-paso-1.onrender.com/) |
+| **Cocina (KDS)** | Pantalla para pizzeros (Recibido, Al Horno, En Mesa) | [https://pizza-al-paso.onrender.com/cocina.html](https://pizza-al-paso-1.onrender.com/cocina.html) |
+| **Caja (POS)** | Registro de cobros (Efectivo, Yape/Plin, Tarjetas) y boletas | [https://pizza-al-paso.onrender.com/caja.html](https://pizza-al-paso-1.onrender.com/caja.html) |
+| **Administracion** | Panel de metricas, ventas y catalogo de productos | [https://pizza-al-paso.onrender.com/admin.html](https://pizza-al-paso-1.onrender.com/admin.html) |
 
 *Nota sobre el servidor en la nube:* La instancia gratuita entra en reposo tras periodos de inactividad. Si el sitio no ha recibido visitas recientes, la primera carga puede tomar entre 30 y 45 segundos mientras reactiva el servicio. Luego de esto, la navegacion opera de forma inmediata.
 
